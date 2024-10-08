@@ -22,64 +22,37 @@
   <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
   [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
-## Description
+# Proyecto de Bootcamp NestJS - Calilegua
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Descripción
 
-## Project setup
+Este proyecto es parte del Bootcamp de NestJS en Calilegua. Tiene como objetivo demostrar los conceptos y prácticas fundamentales aprendidos durante el curso, incluyendo controladores, servicios, pipes, entidades y Objetos de Transferencia de Datos (DTOs).
 
-```bash
-$ npm install
-```
+## Tecnologías Utilizadas
 
-## Compile and run the project
+- **NestJS**: Un framework progresivo de Node.js para construir aplicaciones del lado del servidor de manera eficiente y escalable.
+- **TypeScript**: Un lenguaje de programación con tipado fuerte que se basa en JavaScript.
 
-```bash
-# development
-$ npm run start
+## Características
 
-# watch mode
-$ npm run start:dev
+- **Controladores**: Implementación de endpoints API para manejar solicitudes entrantes y devolver respuestas.
+- **Servicios**: Implementación de la lógica de negocio para gestionar datos e interactuar con entidades.
+- **Pipes**: Transformación y validación de datos para las solicitudes entrantes.
+- **Entidades**: Definición de la estructura del modelo de datos utilizado en la aplicación.
+- **DTOs**: Objetos de Transferencia de Datos para la validación de datos y verificación de tipos.
 
-# production mode
-$ npm run start:prod
-```
+## Instalación
 
-## Run tests
+### Prerrequisitos
 
-```bash
-# unit tests
-$ npm run test
+Asegúrate de tener instalados los siguientes elementos:
 
-# e2e tests
-$ npm run test:e2e
+- Node.js
+- npm
 
-# test coverage
-$ npm run test:cov
-```
+### Clonar el Repositorio
 
-## Resources
+1. Clona el repositorio:
+   ```bash
+   git clone https://github.com/Walter-Daniel/backend-calilegua.git
 
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
