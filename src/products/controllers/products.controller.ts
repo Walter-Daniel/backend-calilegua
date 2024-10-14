@@ -9,8 +9,9 @@ import {
   Put,
   Query,
 } from '@nestjs/common';
-import { CreateProductDTO } from 'src/dtos/product.dto';
-import { ProductsService } from 'src/services/products.service';
+import { ProductsService } from '../services/products.service';
+import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
+
 
 @Controller('products')
 export class ProductsController {
@@ -29,7 +30,7 @@ export class ProductsController {
   @Put(':productId')
   updateProduct(
     @Param('productId') productId: string,
-    @Body() body: CreateProductDTO,
+    @Body() body: UpdateProductDTO,
   ): any {
     return {
       ok: true,
