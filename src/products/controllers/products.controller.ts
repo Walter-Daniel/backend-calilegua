@@ -35,7 +35,7 @@ export class ProductsController {
     return {
       ok: true,
       message: 'Product updated successfully',
-      productId: productId,
+      data: body,
     };
   }
 
