@@ -11,18 +11,19 @@ import { lastValueFrom } from 'rxjs';
 import { HttpModule, HttpService } from '@nestjs/axios';
 import { DatabaseModule } from './database/database.module';
 
-// const APIKEY = 'DEV-456';
-// const APIKEYPROD = 'PROD-12345'
-
 @Module({
-  imports: [ProductsModule, OperatorsModule, HttpModule, DatabaseModule],
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: '.env',
+      isGlobal: true
+    }),
+    HttpModule, 
+    ProductsModule, 
+    OperatorsModule, 
+    DatabaseModule],
   controllers: [AppController],
   providers: [
     AppService,
-    // {
-    //   provide: 'APIKEY',
-    //   useValue: process.env.NODE_ENV === 'prod' ? APIKEYPROD : APIKEY
-    // },
     {
       provide: 'TAREA_ASYNC',
       useFactory: async(http: HttpService) => {
