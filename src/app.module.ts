@@ -10,21 +10,23 @@ import { OperatorsModule } from './operators/operators.module';
 import { lastValueFrom } from 'rxjs';
 import { HttpModule, HttpService } from '@nestjs/axios';
 import { DatabaseModule } from './database/database.module';
-
-// const APIKEY = 'DEV-456';
-// const APIKEYPROD = 'PROD-12345'
+import { enviroments } from './enviroments';
 
 @Module({
-  imports: [ProductsModule, OperatorsModule, HttpModule, DatabaseModule],
+  imports: [
+    ConfigModule.forRoot({
+      envFilePath: enviroments[process.env.NODE_ENV] || '.env',
+      isGlobal: true
+    }),
+    HttpModule, 
+    ProductsModule, 
+    OperatorsModule, 
+    DatabaseModule],
   controllers: [AppController],
   providers: [
     AppService,
-    // {
-    //   provide: 'APIKEY',
-    //   useValue: process.env.NODE_ENV === 'prod' ? APIKEYPROD : APIKEY
-    // },
     {
-      provide: 'TAREA_ASYNC',
+      provide: 'ASYNC_TASK',
       useFactory: async(http: HttpService) => {
         const req = http.get('https://jsonplaceholder.typicode.com/posts');
         const tarea = await lastValueFrom(req);

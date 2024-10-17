@@ -13,7 +13,7 @@ import { CreateOperatorDTO, UpdateOperatorDTO } from '../dtos/operator.dto';
 
 @Controller('operators')
 export class OperatorsController {
-    constructor(private operatorsService: OperatorsService) { }
+    constructor(private operatorsService: OperatorsService) {}
 
     @Post()
     createOperator(@Body() payload: CreateOperatorDTO) {

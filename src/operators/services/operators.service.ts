@@ -2,10 +2,15 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Operator } from '../entities/operator.entity';
 import { Order } from '../entities/order.entity';
 import { ProductsService } from 'src/products/services/products.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class OperatorsService {
-    constructor(private productService: ProductsService) {}
+    constructor(
+        private productService: ProductsService,
+        private configService: ConfigService
+    ) {}
+    
     private operators: Operator[] = [
         {
             id: 1,
@@ -22,6 +27,9 @@ export class OperatorsService {
     ];
 
     findAll() {
+        const apikey = this.configService.get('APIKEY');
+        const dbName = this.configService.get('DB_NAME');
+        console.log({apikey, dbName})
         return this.operators;
     }
 
