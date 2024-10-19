@@ -11,12 +11,14 @@ import {
 } from '@nestjs/common';
 import { ProductsService } from '../services/products.service';
 import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
-
+@ApiTags('Products')
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
   //todo: Create product
+  @ApiOperation({summary: 'Create product'})
   @Post()
   createProduct(@Body() payload: CreateProductDTO) {
     return {
@@ -27,6 +29,7 @@ export class ProductsController {
   }
 
   //todo: Update product
+  @ApiOperation({summary: 'Update product'})
   @Put(':productId')
   updateProduct(
     @Param('productId') productId: string,
@@ -40,6 +43,7 @@ export class ProductsController {
   }
 
   //todo: Delete product by ID
+  @ApiOperation({summary: 'Delete product'})
   @Delete(':productId')
   deleteProduct(@Param('productId', ParseIntPipe) productId: number): any {
     const products = this.productsService.remove(productId);
@@ -54,6 +58,7 @@ export class ProductsController {
   }
 
   //todo: Get all products
+  @ApiOperation({summary: 'Create all products'})
   @Get()
   getAllProducts() {
     const products = this.productsService.findAll();
@@ -65,6 +70,7 @@ export class ProductsController {
   }
 
   //todo: Get product by id
+  @ApiOperation({summary: 'Get product by ID'})
   @Get(':productId')
   getProductById(@Param('productId', ParseIntPipe) productId: number) {
     const id = Number(productId);
@@ -77,6 +83,7 @@ export class ProductsController {
   }
 
   //todo: Get product by filter
+  @ApiOperation({summary: 'Get product by filter'})
   @Get('filter')
   getProductByFilter(@Query('name') name: string) {
     const filterCriteria: any = {};
