@@ -8,13 +8,16 @@ import {
     Post,
     Put,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { OperatorsService } from '../services/operators.service';
 import { CreateOperatorDTO, UpdateOperatorDTO } from '../dtos/operator.dto';
 
+@ApiTags('Operators')
 @Controller('operators')
 export class OperatorsController {
     constructor(private operatorsService: OperatorsService) {}
 
+    @ApiOperation({summary: 'Create operator'})
     @Post()
     createOperator(@Body() payload: CreateOperatorDTO) {
         return {
@@ -24,6 +27,7 @@ export class OperatorsController {
         };
     }
 
+    @ApiOperation({summary: 'Update operator'})
     @Put(':operatorId')
     updateOperator(
         @Param('operatorId') operatorId: string,
@@ -36,6 +40,7 @@ export class OperatorsController {
         };
     }
 
+    @ApiOperation({summary: 'Delete operator'})
     @Delete(':operatorId')
     deleteOperator(@Param('operatorId', ParseIntPipe) operatorId: number) {
         const operators = this.operatorsService.remove(operatorId);
@@ -49,6 +54,7 @@ export class OperatorsController {
         };
     }
 
+    @ApiOperation({summary: 'Get all operators'})
     @Get()
     getAllOperators() {
         const operators = this.operatorsService.findAll();
@@ -59,6 +65,7 @@ export class OperatorsController {
         };
     }
 
+    @ApiOperation({summary: 'Get operator by ID'})
     @Get(':operatorId')
     getOperatorById(@Param('operatorId', ParseIntPipe) operatorId: number) {
         const operator = this.operatorsService.findOne(operatorId);
@@ -69,6 +76,7 @@ export class OperatorsController {
         };
     }
 
+    @ApiOperation({summary: 'Get Orders by ID'})
     @Get(':id/orders')
     getOrders(@Param('id', ParseIntPipe) id: number){
         return this.operatorsService.getOrderByUser(id)
