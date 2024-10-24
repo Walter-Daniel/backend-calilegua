@@ -1,19 +1,36 @@
 import { Module } from '@nestjs/common';
+import { Client } from 'pg';
 
 import { ConfigModule } from '@nestjs/config';
+import { HttpModule, HttpService } from '@nestjs/axios';
+import { lastValueFrom } from 'rxjs';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { ProductsModule } from './products/products.module';
 import { OperatorsModule } from './operators/operators.module';
-import { lastValueFrom } from 'rxjs';
-import { HttpModule, HttpService } from '@nestjs/axios';
-import { DatabaseModule } from './database/database.module';
+import { DatabaseModule } from './postgres_data/database.module';
 import { enviroments } from './enviroments';
 import config from './config';
 
 import * as Joi from 'joi';
+
+
+const client = new Client({
+  user: 'root',
+  host: 'localhost',
+  database: 'my_db',
+  password: '123456',
+  port: 5432,
+});
+
+client.connect();
+client.query('SELECT * FROM tasks', (err, res) => {
+  console.error(err);
+  console.log(res.rows);
+});
+
 
 @Module({
   imports: [
