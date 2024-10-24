@@ -17,6 +17,12 @@ import { CreateOperatorDTO, UpdateOperatorDTO } from '../dtos/operator.dto';
 export class OperatorsController {
     constructor(private operatorsService: OperatorsService) {}
 
+    @Get('tasks') //
+    getTasks() {
+        return this.operatorsService.getTasks();
+    }
+
+
     @ApiOperation({summary: 'Create operator'})
     @Post()
     createOperator(@Body() payload: CreateOperatorDTO) {

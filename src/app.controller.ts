@@ -9,4 +9,8 @@ export class AppController {
   getApiKey(): string {
     return this.appService.getApiKey();
   }
+  @Get('tasks')
+  tasks() {
+	return this.appService.getTasks();
+  }
 }
