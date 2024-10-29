@@ -12,6 +12,7 @@ import { ProductsModule } from './products/products.module';
 import { OperatorsModule } from './operators/operators.module';
 import { DatabaseModule } from './postgres_data/database.module';
 import { enviroments } from './enviroments';
+import { PostgresDataModule } from './postgres_data/postgres_data.module';
 import config from './config';
 
 import * as Joi from 'joi';
@@ -47,7 +48,7 @@ client.query('SELECT * FROM tasks', (err, res) => {
     HttpModule, 
     ProductsModule, 
     OperatorsModule, 
-    DatabaseModule],
+    DatabaseModule, PostgresDataModule],
   controllers: [AppController],
   providers: [
     AppService,

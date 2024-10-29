@@ -47,6 +47,9 @@ lerna-debug.log*
 
 # database
 postgres_data
+postgres_data/*
+postgres_data/
+/postgres_data
 
 # temp directory
 .temp
