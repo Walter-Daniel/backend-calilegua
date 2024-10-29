@@ -1,14 +1,19 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Client } from 'pg';
+
+
 import { Operator } from '../entities/operator.entity';
 import { Order } from '../entities/order.entity';
 import { ProductsService } from 'src/products/services/products.service';
-import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class OperatorsService {
     constructor(
         private productService: ProductsService,
-        private configService: ConfigService
+        private configService: ConfigService,
+        @Inject('PG') private clientPg: Client, 
+
     ) {}
     
     private operators: Operator[] = [
@@ -25,6 +30,18 @@ export class OperatorsService {
             role: 'user',
         },
     ];
+
+    getTasks() {
+        return new Promise((resolve, reject) => {
+          this.clientPg.query('SELECT * FROM tasks', (err, res) => {
+            if (err) {
+              reject(err);
+            }
+            resolve(res.rows);
+          });
+        });
+      }
+    
 
     findAll() {
         const apikey = this.configService.get('APIKEY');
