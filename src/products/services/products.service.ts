@@ -1,48 +1,70 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { FindManyOptions, Like, Repository } from 'typeorm';
+
 import { Product } from 'src/products/entities/product.entity';
+import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
 
 @Injectable()
 export class ProductsService {
-  private idCont = 1;
-  private products: Product[] = [
-    // podriamos darle un tipo :ANY a nuestro vector de productos pero seria muy genérico
-    {
-      id: 1,
-      name: 'Prod A',
-      description: 'Descripcion producto A',
-      price: 6500,
-      stock: 1,
-      origin: 'China',
-      image: '',
-    },
-    {
-      id: 2,
-      name: 'Prod B',
-      description: 'Descripcion producto B',
-      price: 7500,
-      stock: 1,
-      origin: 'Japon',
-      image: '',
-    },
-  ];
-  findAll() {
-    return this.products;
+  constructor(
+    @InjectRepository(Product) private productRepo: Repository<Product>,
+  ) {}
+
+  // Buscar todos los productos
+  async findAll() {
+    return await this.productRepo.find();
   }
-  totalProducts() {
-    return this.products.length;
+
+  // Filtro utilizando find y like para busqueda parcial de productos por nombre.
+  async findByName(productName: string): Promise<Product[]> {
+    return await this.productRepo.find({
+      where: { name: Like(`%${productName}%`) },
+    });
   }
-  findOne(id: number) {
-    const product = this.products.find((product) => product.id === id);
+
+  // Conteo de productos
+  async totalProducts() {
+    const totalProducts = await this.productRepo.count();
+    return totalProducts;
+  }
+
+  // Buscar productos y realizar conteo. Se pueden aplicar filtros, paginación, ordenamiento y limites de registros.
+  async findAndCount(
+    options: FindManyOptions<Product> = {},
+  ): Promise<[Product[], number]> {
+    return this.productRepo.findAndCount(options);
+  }
+
+  // Buscar producto por id (uuid)
+  async findOne(id: string): Promise<Product> {
+    const product = await this.productRepo.findOneBy({ id });
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
     return product;
   }
-  remove(id: number) {
-    const product = this.products.filter((product) => product.id !== id);
-    if (!product) {
+
+  // Crear producto
+  async create(data: CreateProductDTO) {
+    const newProduct = this.productRepo.create(data);
+    return await this.productRepo.save(newProduct);
+  }
+
+  // Atualizar producto de la tabla
+  async update(id: string, changes: UpdateProductDTO): Promise<Product> {
+    const result = await this.productRepo.update(id, changes);
+    if (result.affected === 0) {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
-    return product;
+    return this.productRepo.findOneBy({ id });
+  }
+
+  // Eliminar producto de la tabla
+  async remove(id: string): Promise<void> {
+    const deleteResult = await this.productRepo.delete(id);
+    if (deleteResult.affected === 0) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
+    }
   }
 }

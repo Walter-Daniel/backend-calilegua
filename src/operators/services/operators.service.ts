@@ -71,12 +71,12 @@ export class OperatorsService {
         return this.operators;
     }
 
-    getOrderByUser(id: number): Order {
+    async getOrderByUser(id: number) {
        const operator = this.findOne(id);
        return {
         date: new Date(),
         operator,
-        products: this.productService.findAll()
+        products: await this.productService.findAll()
        };
     };
 }
