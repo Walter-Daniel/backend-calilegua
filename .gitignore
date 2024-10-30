@@ -51,6 +51,8 @@ postgres_data/*
 postgres_data/
 /postgres_data
 
+mysql_data
+
 # temp directory
 .temp
 .tmp
