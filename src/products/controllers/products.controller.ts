@@ -45,7 +45,7 @@ export class ProductsController {
   //todo: Delete product by ID
   @ApiOperation({summary: 'Delete product'})
   @Delete(':productId')
-  deleteProduct(@Param('productId', ParseIntPipe) productId: number): any {
+  deleteProduct(@Param('productId', ParseIntPipe) productId: string): any {
     const products = this.productsService.remove(productId);
     return {
       ok: true,
@@ -53,7 +53,6 @@ export class ProductsController {
       productId: productId,
       delete: true,
       products: products,
-      count: products.length,
     };
   }
 
@@ -72,9 +71,8 @@ export class ProductsController {
   //todo: Get product by id
   @ApiOperation({summary: 'Get product by ID'})
   @Get(':productId')
-  getProductById(@Param('productId', ParseIntPipe) productId: number) {
-    const id = Number(productId);
-    const product = this.productsService.findOne(id);
+  getProductById(@Param('productId', ParseIntPipe) productId: string) {
+    const product = this.productsService.findOne(productId);
     return {
       ok: true,
       message: `Product with ID ${productId} retrieved successfully`,

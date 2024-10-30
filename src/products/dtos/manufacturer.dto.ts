@@ -2,16 +2,10 @@ import { OmitType, PartialType } from '@nestjs/mapped-types';
 import {
   IsNotEmpty,
   IsString,
-  IsNumber,
   IsUrl,
-  IsPositive,
 } from 'class-validator';
 
 export class CreateManufacturerDTO {
-  @IsNumber()
-  @IsPositive()
-  readonly id: number;
-
   @IsString()
   @IsNotEmpty()
   readonly name: string;
@@ -30,5 +24,5 @@ export class CreateManufacturerDTO {
 }
 
 export class UpdateManufacturerDTO extends PartialType(
-  OmitType(CreateManufacturerDTO, ['id']),
+  OmitType(CreateManufacturerDTO, ['name']),
 ) {}

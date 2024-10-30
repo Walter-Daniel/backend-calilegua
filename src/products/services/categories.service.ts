@@ -1,44 +1,51 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Category } from '../entities/category.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { CreateCategoryDTO, UpdateCategoryDTO } from '../dtos/category.dto';
 
 @Injectable()
 export class CategoriesService {
-    private categories: Category[] = [
-        {
-            id: 1,
-            name: 'Example 1'
-        },
-        {
-            id: 2,
-            name: 'Example 2'
-        },
-        {
-            id: 3,
-            name: 'Example 3'
-        },
-        {
-            id: 4,
-            name: 'Example 4'
-        }
-    ]
-    findAll() {
-        return this.categories;
+  constructor(
+    @InjectRepository(Category) private categoryRepo: Repository<Category>,
+  ) {}
+
+  findAll() {
+    return this.categoryRepo.find();
+  }
+
+  totalCategories() {
+    return this.categoryRepo.count();
+  }
+
+  async findOne(id: string) {
+    const category = await this.categoryRepo.findOneBy({ id });
+    if (!category) {
+      throw new NotFoundException(`Category with ID ${id} not found`);
     }
-    totalProducts() {
-        return this.categories.length;
+    return category;
+  }
+
+  // Crear categoría
+  create(data: CreateCategoryDTO) {
+    const newProduct = this.categoryRepo.create(data);
+    return this.categoryRepo.save(newProduct);
+  }
+
+  // Atualizar categoría por id
+  async update(id: string, changes: UpdateCategoryDTO): Promise<Category> {
+    const result = await this.categoryRepo.update(id, changes);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
     }
-    findOne(id: number) {
-        const category = this.categories.find((category) => category.id === id);
-        if (!category) {
-            throw new NotFoundException(`Category with ID ${id} not found`);
-        }
-        return category;
+    return this.categoryRepo.findOneBy({ id });
+  }
+
+  // Eliminar categoría por id
+  async remove(id: string): Promise<void> {
+    const deleteResult = await this.categoryRepo.delete(id);
+    if (deleteResult.affected === 0) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
     }
-    remove(id: number) {
-        const category = this.categories.filter((category) => category.id !== id);
-        if (!category) {
-            throw new NotFoundException(`Category with ID ${id} not found`);
-        }
-        return category;
-    }
+  }
 }
