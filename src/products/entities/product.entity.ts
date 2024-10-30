@@ -1,5 +1,6 @@
 import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
 
+@Entity()
 export class Product {
   // Pensando en un E-commerce, cada intancia va a generar un id único.
   @PrimaryGeneratedColumn('uuid')
