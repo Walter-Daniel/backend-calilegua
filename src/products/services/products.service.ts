@@ -12,8 +12,8 @@ export class ProductsService {
   ) {}
 
   // Buscar todos los productos
-  findAll() {
-    return this.productRepo.find();
+  async findAll() {
+    return await this.productRepo.find();
   }
 
   // Filtro utilizando find y like para busqueda parcial de productos por nombre.
@@ -46,9 +46,9 @@ export class ProductsService {
   }
 
   // Crear producto
-  create(data: CreateProductDTO) {
+  async create(data: CreateProductDTO) {
     const newProduct = this.productRepo.create(data);
-    return this.productRepo.save(newProduct);
+    return await this.productRepo.save(newProduct);
   }
 
   // Atualizar producto de la tabla
