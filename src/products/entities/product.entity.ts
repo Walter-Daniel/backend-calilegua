@@ -1,4 +1,4 @@
-import { PrimaryGeneratedColumn, Column, Entity } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, Entity, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class Product {
@@ -7,15 +7,15 @@ export class Product {
   id: string;
 
   // Un máximo de 100 caracteres por nombre, por si son descriptivos.
-  @Column({length: 100})
+  @Column({ length: 100 })
   name: string;
 
   // El tipado text permite descripciones largas
-  @Column({ type: 'text' }) 
+  @Column({ type: 'text' })
   description: string;
 
   // Precisión para decimales en precios. 10 indica los dígitos totales y 2 la cantidad de decimales.
-  @Column('decimal', { precision: 10, scale: 2 }) 
+  @Column('decimal', { precision: 10, scale: 2 })
   price: number;
 
   // Se asignan enteros para el stock.
@@ -23,10 +23,16 @@ export class Product {
   stock: number;
 
   // Longitud razonable para nombres de origen (país o ciudad).
-  @Column({ length: 100 }) 
+  @Column({ length: 100 })
   origin: string;
 
   // Si la URL es una cadena de texto larga, la mejor opción es text.
-  @Column({ type: 'text' }) 
+  @Column({ type: 'text' })
   image: string;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
 }
