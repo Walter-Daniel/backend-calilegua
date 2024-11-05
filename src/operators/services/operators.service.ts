@@ -1,10 +1,13 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Client } from 'pg';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { Operator } from '../entities/operator.entity';
-import { Order } from '../entities/order.entity';
 import { ProductsService } from 'src/products/services/products.service';
+import { CreateOperatorDTO, UpdateOperatorDTO } from '../dtos/operator.dto';
+import { PurchasersService } from './purchasers.service';
 
 @Injectable()
 export class OperatorsService {
@@ -12,68 +15,71 @@ export class OperatorsService {
     private productService: ProductsService,
     private configService: ConfigService,
     @Inject('PG') private clientPg: Client,
+    @InjectRepository(Operator) private operatorRepo: Repository<Operator>,
+    private purchaserService: PurchasersService
   ) {}
 
-  private operators: Operator[] = [
-    {
-      id: 1,
-      email: 'example1@email.com',
-      password: '123456',
-      role: 'admin',
-    },
-    {
-      id: 2,
-      email: 'example2@email.com',
-      password: '123456',
-      role: 'user',
-    },
-  ];
-
-//   getTasks() {
-//     return new Promise((resolve, reject) => {
-//       this.clientPg.query('SELECT * FROM tasks', (err, res) => {
-//         if (err) {
-//           reject(err);
-//         }
-//         resolve(res.rows);
-//       });
-//     });
-//   }
-
-  findAll() {
-    const apikey = this.configService.get('APIKEY');
-    const dbName = this.configService.get('DB_NAME');
-    console.log({ apikey, dbName });
-    return this.operators;
+  async findAll() {
+    return await this.operatorRepo.find();
   }
 
-  totalOperators() {
-    return this.operators.length;
+  async totalOperators() {
+    return await this.operatorRepo.count();
   }
 
-  findOne(id: number) {
-    const operator = this.operators.find((operator) => operator.id === id);
+  async findOne(id: string) {
+    const operator = await this.operatorRepo.findOne({
+      where: {id},
+      relations: ['purchaser']
+    });
     if (!operator) {
       throw new NotFoundException(`Operator with ID ${id} not found`);
     }
     return operator;
   }
 
-  remove(id: number) {
-    const operator = this.operators.find((operator) => operator.id === id);
-    if (!operator) {
-      throw new NotFoundException(`Operator with ID ${id} not found`);
+  async create(data: CreateOperatorDTO) {
+    const newOperator = this.operatorRepo.create(data);
+    if(data.purchaserId){
+      const purchaser = await this.purchaserService.findOne(data.purchaserId);
+      newOperator.purchaser = purchaser;
     }
-    this.operators = this.operators.filter((operator) => operator.id !== id);
-    return this.operators;
+    return await this.operatorRepo.save(newOperator);
   }
 
-  async getOrderByUser(id: number) {
-    const operator = this.findOne(id);
+  async update(id: string, changes: UpdateOperatorDTO){
+    const result = await this.operatorRepo.update(id, changes);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Operator with ID ${id} not found`);
+    }
+    return this.operatorRepo.findOneBy({ id });
+  }
+
+  async remove(id: string) {
+    const deleteResult = await this.operatorRepo.delete(id);
+    if (deleteResult.affected === 0) {
+      throw new NotFoundException(`Operator with ID ${id} not found`);
+    }
+  }
+
+  async getOrderByUser(id: string) {
+    const operator = this.operatorRepo.findOneBy({id});
     return {
       date: new Date(),
       operator,
       products: await this.productService.findAll(),
     };
+  }
+
+  
+  getTasks() {
+    return new Promise((resolve, reject) => {
+      this.clientPg.query('SELECT * FROM tasks', (err, res) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(res.rows);
+      });
+    });
   }
 }

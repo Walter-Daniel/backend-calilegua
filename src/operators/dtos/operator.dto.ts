@@ -4,13 +4,19 @@ import {
   IsString,
   IsNumber,
   IsPositive,
+  IsOptional,
 } from 'class-validator';
 
 export class CreateOperatorDTO {
   @ApiProperty({description: 'Operator name'})
-  @IsNumber()
-  @IsPositive()
-  readonly id: number;
+  @IsString()
+  @IsNotEmpty()
+  readonly name: string;
+
+  @ApiProperty({description: 'Operator lastname'})
+  @IsString()
+  @IsNotEmpty()
+  readonly lastname: string;
 
   @ApiProperty({description: 'Operator email'})
   @IsString()
@@ -26,8 +32,11 @@ export class CreateOperatorDTO {
   @IsString()
   @IsNotEmpty()
   readonly role: string;
+
+  @ApiProperty()
+  @IsOptional()
+  @IsNotEmpty()
+  readonly purchaserId: string;
 }
 
-export class UpdateOperatorDTO extends PartialType(
-  OmitType(CreateOperatorDTO, ['id']),
-) {}
+export class UpdateOperatorDTO extends PartialType(CreateOperatorDTO) {}
