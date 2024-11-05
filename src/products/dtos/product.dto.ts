@@ -5,12 +5,15 @@ import {
   IsNumber,
   IsUrl,
   IsPositive,
+  MaxLength,
+  IsInt,
 } from 'class-validator';
 
 export class CreateProductDTO {
   @ApiProperty({description: 'Product name'})
   @IsString()
   @IsNotEmpty()
+  @MaxLength(100)
   readonly name: string; //solo lectura
 
   @ApiProperty({description: 'Product description'})
@@ -25,12 +28,14 @@ export class CreateProductDTO {
 
   @ApiProperty({description: 'Product stock'})
   @IsNumber()
+  @IsInt()
   @IsPositive()
   readonly stock: number;
 
   @ApiProperty({description: 'Product origin'})
   @IsString()
   @IsNotEmpty()
+  @MaxLength(100)
   readonly origin: string;
 
   @ApiProperty({description: 'Product image'})
