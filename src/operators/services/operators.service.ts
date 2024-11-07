@@ -16,11 +16,13 @@ export class OperatorsService {
     private configService: ConfigService,
     @Inject('PG') private clientPg: Client,
     @InjectRepository(Operator) private operatorRepo: Repository<Operator>,
-    private purchaserService: PurchasersService
+    private purchaserService: PurchasersService,
   ) {}
 
   async findAll() {
-    return await this.operatorRepo.find();
+    return await this.operatorRepo.find({
+      relations: ['purchaser'],
+    });
   }
 
   async totalOperators() {
@@ -29,8 +31,8 @@ export class OperatorsService {
 
   async findOne(id: string) {
     const operator = await this.operatorRepo.findOne({
-      where: {id},
-      relations: ['purchaser']
+      where: { id },
+      relations: ['purchaser'],
     });
     if (!operator) {
       throw new NotFoundException(`Operator with ID ${id} not found`);
@@ -40,19 +42,29 @@ export class OperatorsService {
 
   async create(data: CreateOperatorDTO) {
     const newOperator = this.operatorRepo.create(data);
-    if(data.purchaserId){
+    if (data.purchaserId) {
       const purchaser = await this.purchaserService.findOne(data.purchaserId);
       newOperator.purchaser = purchaser;
     }
     return await this.operatorRepo.save(newOperator);
   }
 
-  async update(id: string, changes: UpdateOperatorDTO){
-    const result = await this.operatorRepo.update(id, changes);
-    if (result.affected === 0) {
-      throw new NotFoundException(`Operator with ID ${id} not found`);
+  async update(id: string, changes: UpdateOperatorDTO) {
+    const operator = await this.findOne(id);
+    if (!operator) {
+      throw new NotFoundException(`Operator with id ${id} not found`);
     }
-    return this.operatorRepo.findOneBy({ id });
+
+    if(changes.purchaserId){
+      const newPurchaser = await this.purchaserService.findOne(changes.purchaserId);
+      if (!newPurchaser) {
+        throw new NotFoundException(`Purchaser with id ${changes.purchaserId} not found`);
+      }
+      operator.purchaser = newPurchaser;
+    }
+
+    const operatorToUpdate = this.operatorRepo.merge(operator, changes)
+    return await this.operatorRepo.save(operatorToUpdate);
   }
 
   async remove(id: string) {
@@ -63,7 +75,7 @@ export class OperatorsService {
   }
 
   async getOrderByUser(id: string) {
-    const operator = this.operatorRepo.findOneBy({id});
+    const operator = this.operatorRepo.findOneBy({ id });
     return {
       date: new Date(),
       operator,
@@ -71,7 +83,6 @@ export class OperatorsService {
     };
   }
 
-  
   getTasks() {
     return new Promise((resolve, reject) => {
       this.clientPg.query('SELECT * FROM tasks', (err, res) => {

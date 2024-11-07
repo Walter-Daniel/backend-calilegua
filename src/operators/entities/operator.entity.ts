@@ -41,6 +41,12 @@ export class Operator {
   @OneToOne(() => Purchaser, (purchaser) => purchaser.operator, {
     nullable: true,
   })
-  @JoinColumn()
+  @JoinColumn({
+    name: 'purchaserId'
+  })
   purchaser: Purchaser;
+
+  //almacena en tabla operator la referencia a purchaser a traves de purchaserId
+  @Column({name: 'purchaserId', nullable: true})
+  purchaserId: string
 }

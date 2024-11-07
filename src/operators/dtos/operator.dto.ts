@@ -5,6 +5,7 @@ import {
   IsNumber,
   IsPositive,
   IsOptional,
+  IsUUID,
 } from 'class-validator';
 
 export class CreateOperatorDTO {
@@ -24,8 +25,8 @@ export class CreateOperatorDTO {
   readonly email: string;
 
   @ApiProperty({description: 'Operator password'})
-  @IsNumber()
-  @IsPositive()
+  @IsString()
+  @IsNotEmpty()
   readonly password: string;
 
   @ApiProperty({description: 'Operator role'})
@@ -33,10 +34,12 @@ export class CreateOperatorDTO {
   @IsNotEmpty()
   readonly role: string;
 
-  @ApiProperty()
+  @ApiProperty({ description: 'Related purchaser ID', required: false })
   @IsOptional()
-  @IsNotEmpty()
-  readonly purchaserId: string;
+  @IsUUID() // Verifica que sea un UUID válido
+  readonly purchaserId?: string; // Marcado como opcional
 }
 
-export class UpdateOperatorDTO extends PartialType(CreateOperatorDTO) {}
+export class UpdateOperatorDTO extends PartialType(
+  OmitType(CreateOperatorDTO, ['password'])
+) {}
