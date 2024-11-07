@@ -11,8 +11,10 @@ export class ManufacturersService {
     private manufacturerRepo: Repository<Manufacturer>,
   ) {}
   
-  findAll() {
-    return this.manufacturerRepo.find();
+  async findAll() {
+    return await this.manufacturerRepo.find({
+      relations: ['products']
+    });
   }
 
   async totalManufacturers() {
@@ -20,7 +22,10 @@ export class ManufacturersService {
   }
 
   async findOne(id: string) {
-    const manufacturer = await this.manufacturerRepo.findOneBy({ id });
+    const manufacturer = await this.manufacturerRepo.findOne({ 
+      where: {id},
+      relations: ['products']
+     });
     if (!manufacturer) {
       throw new NotFoundException(`Manufacturer with ID ${id} not found`);
     }

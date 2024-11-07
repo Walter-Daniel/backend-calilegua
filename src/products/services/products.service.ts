@@ -4,11 +4,13 @@ import { FindManyOptions, Like, Repository } from 'typeorm';
 
 import { Product } from 'src/products/entities/product.entity';
 import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
+import { ManufacturersService } from './manufacturers.service';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product) private productRepo: Repository<Product>,
+    private manufacturersService: ManufacturersService,
   ) {}
 
   // Buscar todos los productos
@@ -48,16 +50,25 @@ export class ProductsService {
   // Crear producto
   async create(data: CreateProductDTO) {
     const newProduct = this.productRepo.create(data);
+    if(data.manufacturerId){
+      const manufacturer = await this.manufacturersService.findOne(data.manufacturerId);
+      newProduct.manufacturer= manufacturer
+    }
     return await this.productRepo.save(newProduct);
   }
 
   // Atualizar producto de la tabla
   async update(id: string, changes: UpdateProductDTO): Promise<Product> {
-    const result = await this.productRepo.update(id, changes);
-    if (result.affected === 0) {
-      throw new NotFoundException(`Product with ID ${id} not found`);
+    const product = await this.findOne(id);
+    if(changes.manufacturerId){
+      const manufacturer = await this.manufacturersService.findOne(changes.manufacturerId);
+      if(!manufacturer){
+        throw new NotFoundException(`Manufacturer with ID ${id} not found`);
+      }
+      product.manufacturer = manufacturer;
     }
-    return this.productRepo.findOneBy({ id });
+    this.productRepo.merge(product, changes);
+    return await this.productRepo.save(product);
   }
 
   // Eliminar producto de la tabla
