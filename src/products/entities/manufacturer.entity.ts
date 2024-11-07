@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Product } from './product.entity';
 
 @Entity()
 export class Manufacturer {
@@ -19,4 +20,13 @@ export class Manufacturer {
   // Si la URL es una cadena de texto larga, la mejor opción es text.
   @Column({ type: 'text' })
   image: string;
+
+  @CreateDateColumn({ type: 'timestamp' })
+  createdAt: Date;
+
+  @UpdateDateColumn({ type: 'timestamp' })
+  updatedAt: Date;
+
+  @OneToMany(() => Product, (product) => product.manufacturer)
+  products: Product[]
 }

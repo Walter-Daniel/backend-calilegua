@@ -7,6 +7,7 @@ import {
   IsPositive,
   MaxLength,
   IsInt,
+  IsUUID,
 } from 'class-validator';
 
 export class CreateProductDTO {
@@ -42,6 +43,11 @@ export class CreateProductDTO {
   @IsUrl()
   @IsNotEmpty()
   readonly image: string;
+  
+  @ApiProperty({description: 'Products - Manufacturer relation'})
+  @IsNotEmpty()
+  @IsUUID()
+  readonly manufacturerId: string
 }
 
 export class UpdateProductDTO extends PartialType(
