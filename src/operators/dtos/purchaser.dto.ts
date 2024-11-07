@@ -1,11 +1,10 @@
-import { OmitType, PartialType } from '@nestjs/mapped-types';
+import { PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsString,
-  IsNumber,
-  IsPositive,
   IsOptional,
+  IsEmail,
 } from 'class-validator';
 
 export class CreatePurchaserDTO {
@@ -16,14 +15,28 @@ export class CreatePurchaserDTO {
   readonly name: string;
 
   @ApiProperty()
-  @IsNumber()
-  @IsPositive()
+  @IsString()
+  @IsNotEmpty()
   readonly lastname: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
   readonly phone: string;
+
+  @ApiProperty()
+  @IsEmail()
+  @IsNotEmpty()
+  readonly email: string;
+
+  @ApiProperty({ required: false })
+  @IsString()
+  @IsOptional()
+  readonly address?: string;
+
+  @ApiProperty({ required: false })
+  @IsOptional()
+  readonly operatorId?: string;
 }
 
 export class UpdatePurchaserDTO extends PartialType(CreatePurchaserDTO) {}
