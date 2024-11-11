@@ -40,11 +40,11 @@ export class ProductsService {
     return this.productRepo.findAndCount(options);
   }
 
-  // Buscar producto por id (uuid)
+  // Buscar producto por id y fabrica
   async findOne(id: string): Promise<Product> {
     const product = await this.productRepo.findOne({
-      where: {id},
-      relations: ['manufacturer', 'categories']
+      where: { id },
+      relations: ['manufacturer', 'categories'],
     });
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
@@ -54,41 +54,69 @@ export class ProductsService {
 
   // Crear producto
   async create(data: CreateProductDTO) {
-    console.log({data})
     const newProduct = this.productRepo.create(data);
-    if(data.manufacturerId){
-      const manufacturer = await this.manufacturersService.findOne(data.manufacturerId);
-      newProduct.manufacturer= manufacturer
+    if (data.manufacturerId) {
+      const manufacturer = await this.manufacturersService.findOne(
+        data.manufacturerId,
+      );
+      newProduct.manufacturer = manufacturer;
     }
-    if(data.categoriesId && data.categoriesId.length > 0){
-      const categories = await this.categoriesService.findMultipleCategoriesByIds(data.categoriesId);
+    if (data.categoriesId && data.categoriesId.length > 0) {
+      const categories =
+        await this.categoriesService.findMultipleCategoriesByIds(
+          data.categoriesId,
+        );
       newProduct.categories = categories;
     }
     return await this.productRepo.save(newProduct);
   }
 
-  // Atualizar producto de la tabla
+  // Agregar categorías al producto
+  async addCategoryByProduct(productId: string, categoryId: string) {
+    const product = await this.productRepo.findOne({
+      where: { id: productId },
+      relations: ['categories'],
+    });
+    if (!product) {
+      throw new NotFoundException(`Products with ID ${productId} not found`);
+    }
+    const category = await this.categoriesService.findOne(categoryId);
+    product.categories.push(category);
+    return this.productRepo.save(product);
+  }
+
+  // Atualizar producto
   async update(id: string, changes: UpdateProductDTO): Promise<Product> {
     const product = await this.findOne(id);
-    if(changes.manufacturerId){
-      const manufacturer = await this.manufacturersService.findOne(changes.manufacturerId);
-      if(!manufacturer){
+    if (changes.manufacturerId) {
+      const manufacturer = await this.manufacturersService.findOne(
+        changes.manufacturerId,
+      );
+      if (!manufacturer) {
         throw new NotFoundException(`Manufacturer with ID ${id} not found`);
       }
       product.manufacturer = manufacturer;
-    }
-    if(changes.categoriesId){
-      const categories = await this.categoriesService.findMultipleCategoriesByIds(changes.categoriesId);
-      if(!categories){
-        throw new NotFoundException(`Categories with IDs ${id} not found`);
-      }
-      product.categories = categories;
     }
     this.productRepo.merge(product, changes);
     return await this.productRepo.save(product);
   }
 
-  // Eliminar producto de la tabla
+  // Eliminar categoría por producto
+  async removeCategoryByProduct(productId: string, categoryId: string) {
+    const product = await this.productRepo.findOne({
+      where: { id: productId },
+      relations: ['categories'],
+    });
+    if (!product) {
+      throw new NotFoundException(`Products with ID ${productId} not found`);
+    }
+    product.categories = product.categories.filter(
+      (category) => category.id !== categoryId,
+    );
+    return this.productRepo.save(product);
+  }
+
+  // Eliminar producto
   async remove(id: string): Promise<void> {
     const deleteResult = await this.productRepo.delete(id);
     if (deleteResult.affected === 0) {
