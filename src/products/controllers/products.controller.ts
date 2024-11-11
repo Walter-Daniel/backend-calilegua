@@ -21,6 +21,7 @@ export class ProductsController {
   @ApiOperation({ summary: 'Create product' })
   @Post()
   async createProduct(@Body() payload: CreateProductDTO) {
+    console.log({payload})
     const product = await this.productsService.create(payload);
     return {
       ok: true,

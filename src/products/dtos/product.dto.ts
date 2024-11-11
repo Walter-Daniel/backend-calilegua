@@ -8,6 +8,8 @@ import {
   MaxLength,
   IsInt,
   IsUUID,
+  IsArray,
+  ArrayMinSize,
 } from 'class-validator';
 
 export class CreateProductDTO {
@@ -47,9 +49,13 @@ export class CreateProductDTO {
   @ApiProperty({description: 'Products - Manufacturer relation'})
   @IsNotEmpty()
   @IsUUID()
-  readonly manufacturerId: string
+  readonly manufacturerId: string;
+
+  @ApiProperty({description: 'Products - Categories relation'})
+  @IsArray()
+  @ArrayMinSize(1)
+  @IsUUID("all", { each: true })
+  readonly categoriesId: string[];
 }
 
-export class UpdateProductDTO extends PartialType(
-  OmitType(CreateProductDTO, ['name']),
-) {}
+export class UpdateProductDTO extends PartialType(CreateProductDTO) {}

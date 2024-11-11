@@ -5,12 +5,14 @@ import { FindManyOptions, Like, Repository } from 'typeorm';
 import { Product } from 'src/products/entities/product.entity';
 import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
 import { ManufacturersService } from './manufacturers.service';
+import { CategoriesService } from './categories.service';
 
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectRepository(Product) private productRepo: Repository<Product>,
     private manufacturersService: ManufacturersService,
+    private categoriesService: CategoriesService,
   ) {}
 
   // Buscar todos los productos
@@ -40,7 +42,10 @@ export class ProductsService {
 
   // Buscar producto por id (uuid)
   async findOne(id: string): Promise<Product> {
-    const product = await this.productRepo.findOneBy({ id });
+    const product = await this.productRepo.findOne({
+      where: {id},
+      relations: ['manufacturer', 'categories']
+    });
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
@@ -49,10 +54,15 @@ export class ProductsService {
 
   // Crear producto
   async create(data: CreateProductDTO) {
+    console.log({data})
     const newProduct = this.productRepo.create(data);
     if(data.manufacturerId){
       const manufacturer = await this.manufacturersService.findOne(data.manufacturerId);
       newProduct.manufacturer= manufacturer
+    }
+    if(data.categoriesId && data.categoriesId.length > 0){
+      const categories = await this.categoriesService.findMultipleCategoriesByIds(data.categoriesId);
+      newProduct.categories = categories;
     }
     return await this.productRepo.save(newProduct);
   }
@@ -66,6 +76,13 @@ export class ProductsService {
         throw new NotFoundException(`Manufacturer with ID ${id} not found`);
       }
       product.manufacturer = manufacturer;
+    }
+    if(changes.categoriesId){
+      const categories = await this.categoriesService.findMultipleCategoriesByIds(changes.categoriesId);
+      if(!categories){
+        throw new NotFoundException(`Categories with IDs ${id} not found`);
+      }
+      product.categories = categories;
     }
     this.productRepo.merge(product, changes);
     return await this.productRepo.save(product);
