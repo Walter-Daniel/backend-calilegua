@@ -5,10 +5,6 @@ import { CreateOperatorDTO } from 'src/operators/dtos/operator.dto';
 import { CreateProductDTO } from 'src/products/dtos/product.dto';
 
 export class CreateOrderDTO {
-  @IsNumber()
-  @IsPositive()
-  readonly id: number;
-
   @IsDate()
   @IsISO8601()
   @IsDefined()
@@ -27,6 +23,4 @@ export class CreateOrderDTO {
   products: CreateProductDTO[];
 }
 
-export class UpdateOrderDTO extends PartialType(
-  OmitType(CreateOrderDTO, ['id']),
-) {}
+export class UpdateOrderDTO extends PartialType(CreateOrderDTO){}

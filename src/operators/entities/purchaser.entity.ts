@@ -1,5 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, OneToMany } from 'typeorm';
 import { Operator } from './operator.entity';
+import { Order } from './order.entity';
 
 @Entity()
 export class Purchaser {
@@ -31,4 +32,7 @@ export class Purchaser {
     nullable: true
   })
   operator: Operator;
+
+  @OneToMany(() => Order, (order) => order.purchaser)
+  order: Order[];
 }
