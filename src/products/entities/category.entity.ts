@@ -1,4 +1,5 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Product } from './product.entity';
 
 @Entity()
 export class Category {
@@ -6,8 +7,8 @@ export class Category {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // Un máximo de 100 caracteres por nombre, por si son descriptivos.
-  @Column({length: 100})
+  // Un máximo de 150 caracteres por nombre, por si son descriptivos.
+  @Column({type: 'varchar',length: 150, unique:true})
   name: string;
 
   @CreateDateColumn({ type: 'timestamp' })
@@ -15,4 +16,8 @@ export class Category {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
+
+  @ManyToMany(() => Product, (product) => product.categories)
+  @JoinTable()
+  products: Product[];
 }
