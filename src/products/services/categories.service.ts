@@ -35,11 +35,9 @@ export class CategoriesService {
 
   // Atualizar categoría por id
   async update(id: string, changes: UpdateCategoryDTO): Promise<Category> {
-    const result = await this.categoryRepo.update(id, changes);
-    if (result.affected === 0) {
-      throw new NotFoundException(`Product with ID ${id} not found`);
-    }
-    return this.categoryRepo.findOneBy({ id });
+    const category = await this.findOne(id);
+    this.categoryRepo.merge(category, changes);
+    return this.categoryRepo.save(category);
   }
 
   // Eliminar categoría por id
