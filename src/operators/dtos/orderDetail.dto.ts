@@ -1,6 +1,6 @@
 import {  PartialType } from '@nestjs/mapped-types';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsInt, IsUUID, Min } from 'class-validator';
+import { IsInt, IsNumber, IsPositive, IsUUID, Min } from 'class-validator';
 
 
 export class CreateOrderDetailDTO {
@@ -19,4 +19,9 @@ export class CreateOrderDetailDTO {
   quantity: number;
 }
 
-export class UpdateOrderDetailDTO extends PartialType(CreateOrderDetailDTO){}
+export class UpdateOrderDetailDTO extends PartialType(CreateOrderDetailDTO){
+  @ApiProperty({ description: 'Total price' })
+  @IsNumber({ maxDecimalPlaces: 2 })
+  @IsPositive()
+  readonly totalPrice: number;
+}

@@ -40,13 +40,11 @@ export class PurchasersController {
 
     @Delete(':purchaserId')
     async deletePurchaser(@Param('purchaserId') purchaserId: string) {
-        const purchasers = await this.purchasersService.remove(purchaserId);
+        console.log({purchaserId})
+        await this.purchasersService.remove(purchaserId);
         return {
             ok: true,
             message: 'Purchaser deleted successfully',
-            purchaserId,
-            delete: true,
-            purchasers,
         };
     }
 
