@@ -23,6 +23,4 @@ export class CreateManufacturerDTO {
   readonly image: string;
 }
 
-export class UpdateManufacturerDTO extends PartialType(
-  OmitType(CreateManufacturerDTO, ['name']),
-) {}
+export class UpdateManufacturerDTO extends PartialType(CreateManufacturerDTO) {}

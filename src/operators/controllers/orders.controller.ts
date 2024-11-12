@@ -15,41 +15,40 @@ import { CreateOrderDTO, UpdateOrderDTO } from '../dtos/order.dto';
 export class OrdersController {
     constructor(private ordersService: OrdersService) { }
 
-    // @Post()
-    // createOrder(@Body() payload: CreateOrderDTO) {
-    //     return {
-    //         ok: true,
-    //         message: 'Order created successfully',
-    //         payload,
-    //     };
-    // }
+    @Post()
+    async createOrder(@Body() payload: CreateOrderDTO) {
+        const order = await this.ordersService.create(payload)
+        return {
+            ok: true,
+            message: 'Order created successfully',
+            order
+        };
+    }
 
-    // @Put(':orderId')
-    // updateOrder(
-    //     @Param('orderId') orderId: string,
-    //     @Body() body: UpdateOrderDTO,
-    // ) {
-    //     return {
-    //         ok: true,
-    //         message: 'Order updated successfully',
-    //         data: body,
-    //     };
-    // }
+    @Put(':orderId')
+    async updateOrder(
+        @Param('orderId') orderId: string,
+        @Body() body: UpdateOrderDTO,
+    ) {
+        const orderToUpdate = await this.ordersService.update(orderId, body)
+        return {
+            ok: true,
+            message: 'Order updated successfully',
+            order: orderToUpdate
+        };
+    }
 
-    // @Delete(':orderId')
-    // deleteOrder(@Param('orderId', ParseIntPipe) orderId: number) {
-    //     const orders = this.ordersService.remove(orderId);
-    //     return {
-    //         ok: true,
-    //         message: 'Order deleted successfully',
-    //         orderId,
-    //         delete: true,
-    //         orders,
-    //     };
-    // }
+    @Delete(':orderId')
+    async deleteOrder(@Param('orderId') orderId: string) {
+        await this.ordersService.remove(orderId);
+        return {
+            ok: true,
+            message: 'Order deleted successfully', 
+        };
+    }
 
     @Get()
-    getAllOrders() {
+    getOrders() {
         const orders = this.ordersService.findAll();
         return {
             ok: true,
@@ -58,13 +57,13 @@ export class OrdersController {
         };
     }
 
-    // @Get(':orderId')
-    // getOrderById(@Param('orderId', ParseIntPipe) orderId: number) {
-    //     const order = this.ordersService.findOne(orderId);
-    //     return {
-    //         ok: true,
-    //         message: `Order with ID ${orderId} retrieved successfully`,
-    //         order,
-    //     };
-    // }
+    @Get(':orderId')
+    async getOrderById(@Param('orderId') orderId: string) {
+        const order = await this.ordersService.findOne(orderId);
+        return {
+            ok: true,
+            message: `Order with ID ${orderId} retrieved successfully`,
+            order,
+        };
+    }
 }

@@ -21,6 +21,7 @@ export class ProductsController {
   @ApiOperation({ summary: 'Create product' })
   @Post()
   async createProduct(@Body() payload: CreateProductDTO) {
+    console.log({payload})
     const product = await this.productsService.create(payload);
     return {
       ok: true,
@@ -42,6 +43,20 @@ export class ProductsController {
       message: 'Product updated successfully',
       data: productToUpdate,
     };
+  }
+
+  @ApiOperation({ summary: 'Add category to product' })
+  @Put(':productId/category/:categoryId')
+  async addCategoryToProduct(
+    @Param('productId') productId: string,
+    @Param('categoryId') categoryId: string,
+  ){
+    const addCategoryToProduct = await this.productsService.addCategoryByProduct(productId, categoryId)
+    return {
+      ok: true,
+      message: 'Category added successfully',
+      product: addCategoryToProduct
+    }
   }
 
   //todo: Get all products
@@ -94,5 +109,20 @@ export class ProductsController {
       delete: true,
       products: products,
     };
+  }
+
+  //Delete category
+  @ApiOperation({ summary: 'Delete category from product' })
+  @Delete(':productId/category/:categoryId')
+  async removeCategoryFromProduct(
+    @Param('productId') productId: string,
+    @Param('categoryId') categoryId: string,
+  ){
+    const productWithUpdatedCategories = await this.productsService.removeCategoryByProduct(productId, categoryId)
+    return {
+      ok: true,
+      message: 'Category deletd successfully',
+      product: productWithUpdatedCategories
+    }
   }
 }

@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Purchaser } from '../entities/purchaser.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreatePurchaserDTO, UpdatePurchaserDTO } from '../dtos/purchaser.dto';
+import { isUUID } from 'class-validator';
 
 @Injectable()
 export class PurchasersService {
@@ -40,6 +41,9 @@ export class PurchasersService {
   }
 
   async remove(id: string) {
+    if(!isUUID(id)) {
+      throw new BadRequestException(`Invalid UUID format for ID: #${id}`)
+    };
     const deleteResult = await this.purchaserRepo.delete(id);
     if (deleteResult.affected === 0) {
       throw new NotFoundException(`Purchaser with ID ${id} not found`);

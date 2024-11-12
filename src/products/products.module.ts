@@ -1,14 +1,18 @@
 import { Module } from '@nestjs/common';
-import { CategoriesController } from './controllers/categories.controller';
-import { ManufacturersController } from './controllers/manufacturers.controller';
-import { ProductsController } from './controllers/products.controller';
-import { CategoriesService } from './services/categories.service';
-import { ManufacturersService } from './services/manufacturers.service';
-import { ProductsService } from './services/products.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Product } from './entities/product.entity';
+
+import { CategoriesController } from './controllers/categories.controller';
+import { CategoriesService } from './services/categories.service';
 import { Category } from './entities/category.entity';
+
+import { ManufacturersController } from './controllers/manufacturers.controller';
+import { ManufacturersService } from './services/manufacturers.service';
 import { Manufacturer } from './entities/manufacturer.entity';
+
+import { ProductsController } from './controllers/products.controller';
+import { ProductsService } from './services/products.service';
+import { Product } from './entities/product.entity';
+
 
 @Module({
   imports: [TypeOrmModule.forFeature([Product, Category, Manufacturer])],
@@ -17,10 +21,7 @@ import { Manufacturer } from './entities/manufacturer.entity';
     ManufacturersController,
     ProductsController,
   ],
-  providers: [
-    CategoriesService,
-    ManufacturersService, 
-    ProductsService],
-  exports: [ProductsService],
+  providers: [CategoriesService, ManufacturersService, ProductsService],
+  exports: [ProductsService, TypeOrmModule],
 })
 export class ProductsModule {}

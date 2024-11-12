@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { Category } from '../entities/category.entity';
 import { CreateCategoryDTO, UpdateCategoryDTO } from '../dtos/category.dto';
+import { isUUID } from 'class-validator';
 
 @Injectable()
 export class CategoriesService {
@@ -19,12 +20,36 @@ export class CategoriesService {
     return this.categoryRepo.count();
   }
 
+  //Buscar categoría id
   async findOne(id: string) {
     const category = await this.categoryRepo.findOneBy({ id });
     if (!category) {
       throw new NotFoundException(`Category with ID ${id} not found`);
     }
     return category;
+  }
+
+  // Buscar categorías utilizando multiples IDs.
+  //Utilizando el operador In, podemos realizar consultas y encontras categorias a través del array de ids proporcionado
+  async findMultipleCategoriesByIds(ids: string[]): Promise<Category[]> {
+
+    //Validar el uuid antes de que se realice la consulta
+    const invalidIds = ids.filter(id => !isUUID(id));
+    if (invalidIds.length > 0) {
+      throw new BadRequestException(`Invalid UUID format for IDs: ${invalidIds.join(', ')}`);
+    }
+
+    const categories = await this.categoryRepo.find({
+      where: { id: In(ids) },
+    });
+   
+    if (categories.length !== ids.length) {
+      const foundIds = categories.map(category => category.id);
+      const missingIds = ids.filter(id => !foundIds.includes(id));
+      throw new NotFoundException(`Categories with IDs ${missingIds.join(', ')} not found`);
+    }
+
+    return categories;
   }
 
   // Crear categoría
