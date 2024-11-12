@@ -22,7 +22,7 @@ import { OrderDetail } from './entities/orderDetail.entity';
   controllers: [
     OperatorsController, 
     OrdersController, 
-    PurchasersController
+    PurchasersController,
   ],
   providers: [
     OperatorsService, 
