@@ -8,6 +8,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Purchaser } from './purchaser.entity';
+import { Exclude } from 'class-transformer';
 
 // Asignamos los tipos de roles a los operadores
 export enum OperatorRole {
@@ -43,9 +44,11 @@ export class Operator {
   @Column({ default: true })
   isActive: boolean;
 
+  @Exclude()
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
-
+  
+  @Exclude()
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 

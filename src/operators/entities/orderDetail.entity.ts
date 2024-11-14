@@ -8,6 +8,7 @@ import {
   ManyToOne,
 } from 'typeorm';
 import { Order } from './order.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class OrderDetail {
@@ -20,9 +21,11 @@ export class OrderDetail {
   @Column('decimal', { precision: 10, scale: 2 })
   totalPrice: number;
 
+  @Exclude()
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
+  @Exclude()
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 

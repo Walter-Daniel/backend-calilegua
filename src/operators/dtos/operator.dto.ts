@@ -2,11 +2,11 @@ import { ApiProperty, OmitType, PartialType  } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsString,
-  IsNumber,
-  IsPositive,
   IsOptional,
   IsUUID,
+  IsEnum,
 } from 'class-validator';
+import { OperatorRole } from '../entities/operator.entity';
 
 export class CreateOperatorDTO {
   @ApiProperty({description: 'Operator name'})
@@ -29,10 +29,9 @@ export class CreateOperatorDTO {
   @IsNotEmpty()
   readonly password: string;
 
-  @ApiProperty({description: 'Operator role'})
-  @IsString()
-  @IsNotEmpty()
-  readonly role: string;
+  @ApiProperty({ description: 'Operator role', enum: OperatorRole })
+  @IsEnum(OperatorRole)
+  readonly role: OperatorRole;
 
   @ApiProperty({ description: 'Related purchaser ID', required: false })
   @IsOptional()

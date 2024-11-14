@@ -1,6 +1,7 @@
 import { PrimaryGeneratedColumn, Column, Entity, CreateDateColumn, UpdateDateColumn, ManyToOne, ManyToMany, Index, JoinColumn } from 'typeorm';
 import { Manufacturer } from './manufacturer.entity';
 import { Category } from './category.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Product {
@@ -33,9 +34,11 @@ export class Product {
   @Column({ type: 'text' })
   image: string;
 
+  @Exclude()
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
+  @Exclude()
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
