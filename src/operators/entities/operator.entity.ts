@@ -9,6 +9,13 @@ import {
 } from 'typeorm';
 import { Purchaser } from './purchaser.entity';
 
+// Asignamos los tipos de roles a los operadores
+export enum OperatorRole {
+  ADMIN = 'admin',
+  MANAGER = 'manager',
+  STAFF = 'staff',
+}
+
 @Entity()
 export class Operator {
   @PrimaryGeneratedColumn('uuid')
@@ -20,8 +27,12 @@ export class Operator {
   @Column({ length: 255 })
   password: string;
 
-  @Column({ length: 50 })
-  role: string;
+  @Column({
+    type: 'enum',
+    enum: OperatorRole,
+    default: OperatorRole.STAFF
+  })
+  role: OperatorRole;
 
   @Column({ length: 100, nullable: true })
   name: string;
@@ -42,11 +53,7 @@ export class Operator {
     nullable: true,
   })
   @JoinColumn({
-    name: 'purchaserId'
+    name: 'purchaser_id'
   })
   purchaser: Purchaser;
-
-  //almacena en tabla operator la referencia a purchaser a traves de purchaserId
-  @Column({name: 'purchaserId', nullable: true})
-  purchaserId: string
 }
