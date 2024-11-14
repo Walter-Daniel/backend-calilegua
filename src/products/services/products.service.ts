@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, Like, Repository } from 'typeorm';
 
 import { Product } from 'src/products/entities/product.entity';
-import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
+import { CreateProductDTO, FilterProductDTO, UpdateProductDTO } from '../dtos/product.dto';
 import { ManufacturersService } from './manufacturers.service';
 import { CategoriesService } from './categories.service';
 
@@ -16,8 +16,18 @@ export class ProductsService {
   ) {}
 
   // Buscar todos los productos
-  async findAll() {
-    return await this.productRepo.find();
+  async findAll(params?: FilterProductDTO) {
+    if(params){
+      const { limit, offset } = params;
+      return await this.productRepo.find({
+        relations: ['manufacturer'],
+        take: limit,
+        skip: offset
+      })
+    }
+    return await this.productRepo.find({
+      relations: ['manufacturer']
+    });
   }
 
   // Filtro utilizando find y like para busqueda parcial de productos por nombre.

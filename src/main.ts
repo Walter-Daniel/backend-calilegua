@@ -8,8 +8,11 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // evita campos extras en el Payload al crear
-      //forbidNonWhitelisted: true,
-      //disableErrorMessages: true, 
+      forbidNonWhitelisted: true,
+      //disableErrorMessages: true,
+      transformOptions: {
+        enableImplicitConversion: true //Convierte si existe cadena de caracter numericos
+      } 
     }),
   );
 
