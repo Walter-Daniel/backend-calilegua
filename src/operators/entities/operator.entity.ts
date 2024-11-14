@@ -25,6 +25,7 @@ export class Operator {
   @Column({ length: 100, unique: true })
   email: string;
 
+  @Exclude()
   @Column({ length: 255 })
   password: string;
 
