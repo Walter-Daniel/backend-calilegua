@@ -1,6 +1,7 @@
-import { PrimaryGeneratedColumn, Column, Entity, CreateDateColumn, UpdateDateColumn, ManyToOne, ManyToMany } from 'typeorm';
+import { PrimaryGeneratedColumn, Column, Entity, CreateDateColumn, UpdateDateColumn, ManyToOne, ManyToMany, Index, JoinColumn } from 'typeorm';
 import { Manufacturer } from './manufacturer.entity';
 import { Category } from './category.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Product {
@@ -17,6 +18,7 @@ export class Product {
   description: string;
 
   // Precisión para decimales en precios. 10 indica los dígitos totales y 2 la cantidad de decimales.
+  @Index()
   @Column('decimal', { precision: 10, scale: 2 })
   price: number;
 
@@ -32,13 +34,16 @@ export class Product {
   @Column({ type: 'text' })
   image: string;
 
+  @Exclude()
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
+  @Exclude()
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
   @ManyToOne(() => Manufacturer, (manufacturer) => manufacturer.products)
+  @JoinColumn({ name: 'manufacturer_id '})
   manufacturer: Manufacturer;
 
   @ManyToMany(() => Category, (category) => category.products)

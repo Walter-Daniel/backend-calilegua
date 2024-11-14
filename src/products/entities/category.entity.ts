@@ -1,5 +1,6 @@
 import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Product } from './product.entity';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class Category {
@@ -11,13 +12,23 @@ export class Category {
   @Column({type: 'varchar',length: 150, unique:true})
   name: string;
 
+  @Exclude()
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
-
+  
+  @Exclude()
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
   @ManyToMany(() => Product, (product) => product.categories)
-  @JoinTable()
+  @JoinTable({
+    name: 'products_caregory',
+    joinColumn: {
+      name: 'category_id'
+    },
+    inverseJoinColumn: {
+      name: 'product_id'
+    }
+  })
   products: Product[];
 }

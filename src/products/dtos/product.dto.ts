@@ -10,6 +10,9 @@ import {
   IsUUID,
   IsArray,
   ArrayMinSize,
+  IsOptional,
+  Min,
+  ValidateIf,
 } from 'class-validator';
 
 export class CreateProductDTO {
@@ -59,3 +62,21 @@ export class CreateProductDTO {
 }
 
 export class UpdateProductDTO extends PartialType(CreateProductDTO) {}
+
+export class FilterProductDTO {
+  @IsOptional()
+  @IsPositive()
+  limit: number;
+
+  @IsOptional()
+  @Min(0)
+  offset: number;
+  
+  @IsOptional()
+  @IsPositive()
+  minPrice: number;
+
+  @ValidateIf((item) => item.minPrice)
+  @IsPositive()
+  maxPrice: number;
+}

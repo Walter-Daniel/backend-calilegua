@@ -1,8 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, OneToMany, Check } from 'typeorm';
 import { Operator } from './operator.entity';
 import { Order } from './order.entity';
+import { Exclude } from 'class-transformer';
+import { Min } from 'class-validator';
 
 @Entity()
+@Check(`"age" >= 18`)
 export class Purchaser {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -13,6 +16,10 @@ export class Purchaser {
   @Column({ length: 100 })
   lastname: string;
 
+  @Column({ type: 'int' })
+  @Min(18, { message: 'Purchaser must be at least 18 years old' })
+  age: number;
+
   @Column({ length: 20 })
   phone: string;
 
@@ -22,9 +29,11 @@ export class Purchaser {
   @Column({ type: 'text', nullable: true })
   address: string;
 
+  @Exclude()
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 
+  @Exclude()
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
 
