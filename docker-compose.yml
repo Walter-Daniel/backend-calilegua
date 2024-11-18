@@ -1,26 +1,13 @@
 version: '3.3'
 
 services:
-  postgres:
-    image: postgres:13
+  my-mongo:
+    image: mongo:5.0
     environment:
-     - POSTGRES_DB=my_db
-     - POSTGRES_USER=root
-     - POSTGRES_PASSWORD=123456
+      - MONGO_INITDB_DATABASE=my_db_mongo
+      - MONGO_INITDB_ROOT_USERNAME=walter
+      - MONGO_INITDB_ROOT_PASSWORD=123456
     ports:
-      - '5432:5432'
+      - '27017:27017'
     volumes:
-      - ./postgres_data:/var/lib/postgresql/data
-
-  mysql:
-    image: mysql:5
-    environment:
-     - MYSQL_DATABASE=my_db
-     - MYSQL_USER=walter
-     - MYSQL_PASSWORD=123456
-     - MYSQL_ROOT_PASSWORD=123456
-    ports:
-      - '3306:3306'
-    volumes:
-      - ./mysql_data:/var/lib/mysql
-
+      - ./mongo_data:/data/db

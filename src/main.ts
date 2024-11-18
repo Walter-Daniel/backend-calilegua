@@ -11,8 +11,8 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
       //disableErrorMessages: true,
       transformOptions: {
-        enableImplicitConversion: true //Convierte si existe cadena de caracter numericos
-      } 
+        enableImplicitConversion: true, //Convierte si existe cadena de caracter numericos
+      },
     }),
   );
 
@@ -26,7 +26,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
-  
+
   await app.listen(process.env.PORT || 3000);
 }
 bootstrap();

@@ -20,18 +20,18 @@ import { OrderDetail } from './entities/orderDetail.entity';
 import { ProductsModule } from 'src/products/products.module';
 
 @Module({
-  imports:[ProductsModule, TypeOrmModule.forFeature([Operator, Purchaser, Order, OrderDetail])],
+  imports: [ProductsModule],
   controllers: [
-    OperatorsController, 
-    OrdersController, 
-    PurchasersController, 
+    OperatorsController,
+    OrdersController,
+    PurchasersController,
     OrderDetailController,
   ],
   providers: [
-    OperatorsService, 
-    OrdersService, 
-    PurchasersService, 
-    OrderDetailService
-  ]
+    OperatorsService,
+    OrdersService,
+    PurchasersService,
+    OrderDetailService,
+  ],
 })
 export class OperatorsModule {}

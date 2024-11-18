@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { Client } from 'pg';
+import { MongoClient } from 'mongodb';
 
 import { ConfigModule } from '@nestjs/config';
 import { HttpModule, HttpService } from '@nestjs/axios';
-import { lastValueFrom } from 'rxjs';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -30,6 +29,18 @@ import * as Joi from 'joi';
 //   console.log(res.rows);
 // });
 
+const uri = 'mongodb://walter:123456@localhost:27017/?authMechanism=DEFAULT';
+
+// const client = new MongoClient(uri);
+// async function run() {
+//   await client.connect();
+//   const database = client.db('admin');
+//   const taskCollection = database.collection('tasks');
+//   const tasks = await taskCollection.find().toArray();
+//   console.log(tasks);
+// }
+// run();
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -40,25 +51,13 @@ import * as Joi from 'joi';
         APIKEY: Joi.number().required(),
         DB_NAME: Joi.string().required(),
         DB_PORT: Joi.number().required(),
-      })
+      }),
     }),
-    HttpModule, 
-    ProductsModule, 
-    OperatorsModule, 
-    DatabaseModule
+    // ProductsModule,
+    // OperatorsModule,
+    DatabaseModule,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    {
-      provide: 'ASYNC_TASK',
-      useFactory: async(http: HttpService) => {
-        const req = http.get('https://jsonplaceholder.typicode.com/posts');
-        const tarea = await lastValueFrom(req);
-        return tarea.data
-      },
-      inject: [HttpService]
-    }
-  ],
+  providers: [AppService],
 })
 export class AppModule {}
