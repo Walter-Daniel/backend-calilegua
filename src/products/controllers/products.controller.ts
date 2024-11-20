@@ -10,6 +10,7 @@ import {
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { ProductsService } from '../services/products.service';
 import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
+import { MongoIdPipe } from 'src/common/mongo-id.pipe';
 
 @ApiTags('Products')
 @Controller('products')
@@ -32,7 +33,7 @@ export class ProductsController {
   @ApiOperation({ summary: 'Update product' })
   @Put(':productId')
   async updateProduct(
-    @Param('productId') productId: string,
+    @Param('productId', MongoIdPipe) productId: string,
     @Body() payload: UpdateProductDTO,
   ) {
     const productToUpdate = await this.productsService.update(
@@ -61,7 +62,7 @@ export class ProductsController {
   //todo: Get product by id
   @ApiOperation({ summary: 'Get product by ID' })
   @Get(':productId')
-  async getProductById(@Param('productId') productId: string) {
+  async getProductById(@Param('productId', MongoIdPipe) productId: string) {
     const product = await this.productsService.findOne(productId);
     return {
       ok: true,
@@ -73,7 +74,7 @@ export class ProductsController {
   //todo: Delete product by ID
   @ApiOperation({ summary: 'Delete product' })
   @Delete(':productId')
-  async deleteProduct(@Param('productId') productId: string) {
+  async deleteProduct(@Param('productId', MongoIdPipe) productId: string) {
     const products = await this.productsService.remove(productId);
     return {
       ok: true,
