@@ -4,10 +4,8 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
-  Query,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { ProductsService } from '../services/products.service';
@@ -21,7 +19,7 @@ export class ProductsController {
   @ApiOperation({ summary: 'Create product' })
   @Post()
   async createProduct(@Body() payload: CreateProductDTO) {
-    console.log({payload})
+    console.log({ payload });
     const product = await this.productsService.create(payload);
     return {
       ok: true,
@@ -35,28 +33,17 @@ export class ProductsController {
   @Put(':productId')
   async updateProduct(
     @Param('productId') productId: string,
-    @Body() body: UpdateProductDTO,
+    @Body() payload: UpdateProductDTO,
   ) {
-    const productToUpdate = await this.productsService.update(productId, body)
+    const productToUpdate = await this.productsService.update(
+      productId,
+      payload,
+    );
     return {
       ok: true,
       message: 'Product updated successfully',
       data: productToUpdate,
     };
-  }
-
-  @ApiOperation({ summary: 'Add category to product' })
-  @Put(':productId/category/:categoryId')
-  async addCategoryToProduct(
-    @Param('productId') productId: string,
-    @Param('categoryId') categoryId: string,
-  ){
-    const addCategoryToProduct = await this.productsService.addCategoryByProduct(productId, categoryId)
-    return {
-      ok: true,
-      message: 'Category added successfully',
-      product: addCategoryToProduct
-    }
   }
 
   //todo: Get all products
@@ -83,20 +70,6 @@ export class ProductsController {
     };
   }
 
-  //todo: Get product by filter
-  @ApiOperation({ summary: 'Get product by filter' })
-  @Get('filter')
-  getProductByFilter(@Query('name') name: string) {
-    const filterCriteria: any = {};
-    if (name) filterCriteria.name = name;
-
-    return {
-      ok: true,
-      message: `Products filtered by criteria: ${JSON.stringify(filterCriteria)}`,
-      products: [{ id: 1, name: name || 'Product A' }],
-    };
-  }
-
   //todo: Delete product by ID
   @ApiOperation({ summary: 'Delete product' })
   @Delete(':productId')
@@ -109,20 +82,5 @@ export class ProductsController {
       delete: true,
       products: products,
     };
-  }
-
-  //Delete category
-  @ApiOperation({ summary: 'Delete category from product' })
-  @Delete(':productId/category/:categoryId')
-  async removeCategoryFromProduct(
-    @Param('productId') productId: string,
-    @Param('categoryId') categoryId: string,
-  ){
-    const productWithUpdatedCategories = await this.productsService.removeCategoryByProduct(productId, categoryId)
-    return {
-      ok: true,
-      message: 'Category deletd successfully',
-      product: productWithUpdatedCategories
-    }
   }
 }

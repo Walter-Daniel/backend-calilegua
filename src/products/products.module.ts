@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
+import { MongooseModule } from '@nestjs/mongoose';
 
 import { CategoriesController } from './controllers/categories.controller';
 import { CategoriesService } from './services/categories.service';
@@ -11,16 +11,23 @@ import { Manufacturer } from './entities/manufacturer.entity';
 
 import { ProductsController } from './controllers/products.controller';
 import { ProductsService } from './services/products.service';
-import { Product } from './entities/product.entity';
+import { Product, ProductSchema } from './entities/product.entity';
 
 @Module({
-  imports: [],
+  imports: [
+    MongooseModule.forFeature([
+      {
+        name: Product.name,
+        schema: ProductSchema,
+      },
+    ]),
+  ],
   controllers: [
     CategoriesController,
     ManufacturersController,
     ProductsController,
   ],
   providers: [CategoriesService, ManufacturersService, ProductsService],
-  exports: [ProductsService, TypeOrmModule],
+  exports: [ProductsService, MongooseModule],
 })
 export class ProductsModule {}
