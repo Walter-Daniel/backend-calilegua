@@ -1,4 +1,4 @@
-import { ApiProperty, OmitType, PartialType  } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
 import {
   IsNotEmpty,
   IsString,
@@ -12,53 +12,41 @@ import {
   ArrayMinSize,
   IsOptional,
   Min,
-  ValidateIf,
 } from 'class-validator';
 
 export class CreateProductDTO {
-  @ApiProperty({description: 'Product name'})
+  @ApiProperty({ description: 'Product name' })
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
   readonly name: string; //solo lectura
 
-  @ApiProperty({description: 'Product description'})
+  @ApiProperty({ description: 'Product description' })
   @IsString()
   @IsNotEmpty()
   readonly description: string;
 
-  @ApiProperty({description: 'Product price'})
+  @ApiProperty({ description: 'Product price' })
   @IsNumber()
   @IsPositive()
   readonly price: number;
 
-  @ApiProperty({description: 'Product stock'})
+  @ApiProperty({ description: 'Product stock' })
   @IsNumber()
   @IsInt()
   @IsPositive()
   readonly stock: number;
 
-  @ApiProperty({description: 'Product origin'})
+  @ApiProperty({ description: 'Product origin' })
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
   readonly origin: string;
 
-  @ApiProperty({description: 'Product image'})
+  @ApiProperty({ description: 'Product image' })
   @IsUrl()
   @IsNotEmpty()
   readonly image: string;
-  
-  @ApiProperty({description: 'Products - Manufacturer relation'})
-  @IsNotEmpty()
-  @IsUUID()
-  readonly manufacturerId: string;
-
-  @ApiProperty({description: 'Products - Categories relation'})
-  @IsArray()
-  @ArrayMinSize(1)
-  @IsUUID("all", { each: true })
-  readonly categoriesId: string[];
 }
 
 export class UpdateProductDTO extends PartialType(CreateProductDTO) {}
@@ -71,12 +59,4 @@ export class FilterProductDTO {
   @IsOptional()
   @Min(0)
   offset: number;
-  
-  @IsOptional()
-  @IsPositive()
-  minPrice: number;
-
-  @ValidateIf((item) => item.minPrice)
-  @IsPositive()
-  maxPrice: number;
 }

@@ -53,7 +53,7 @@ const uri = 'mongodb://walter:123456@localhost:27017/?authMechanism=DEFAULT';
         DB_PORT: Joi.number().required(),
       }),
     }),
-    // ProductsModule,
+    ProductsModule,
     // OperatorsModule,
     DatabaseModule,
   ],

@@ -1,67 +1,50 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Between, FindManyOptions, FindOptionsWhere, Like, Repository } from 'typeorm';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { Product } from 'src/products/entities/product.entity';
-import { CreateProductDTO, FilterProductDTO, UpdateProductDTO } from '../dtos/product.dto';
+import {
+  CreateProductDTO,
+  FilterProductDTO,
+  UpdateProductDTO,
+} from '../dtos/product.dto';
 import { ManufacturersService } from './manufacturers.service';
 import { CategoriesService } from './categories.service';
-
-
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class ProductsService {
   constructor(
-    @InjectRepository(Product) private productRepo: Repository<Product>,
-    private manufacturersService: ManufacturersService,
-    private categoriesService: CategoriesService,
+    @InjectModel(Product.name) private productModel: Model<Product>,
   ) {}
+
+  private toPlain(doc: Product): Product {
+    return plainToClass(Product, doc.toObject({ getters: true }));
+  }
 
   // Buscar todos los productos
   async findAll(params?: FilterProductDTO) {
-    if(params){
-      const where: FindOptionsWhere<Product> = {};
-      const { limit, offset, maxPrice, minPrice } = params;
-      if(minPrice && maxPrice) {
-        where.price = Between(minPrice, maxPrice);
-      }
-      return await this.productRepo.find({
-        relations: ['manufacturer'],
-        take: limit,
-        skip: offset
-      })
+    if (params) {
+      const { limit, offset } = params;
+      return await this.productModel.find().skip(offset).limit(limit).exec();
     }
-    return await this.productRepo.find({
-      relations: ['manufacturer']
-    });
+    return await this.productModel.find().exec();
   }
 
   // Filtro utilizando find y like para busqueda parcial de productos por nombre.
   async findByName(productName: string): Promise<Product[]> {
-    return await this.productRepo.find({
-      where: { name: Like(`%${productName}%`) },
+    return await this.productModel.find({
+      where: { name: productName },
     });
-  }
-
-  // Conteo de productos
-  async totalProducts() {
-    const totalProducts = await this.productRepo.count();
-    return totalProducts;
-  }
-
-  // Buscar productos y realizar conteo. Se pueden aplicar filtros, paginación, ordenamiento y limites de registros.
-  async findAndCount(
-    options: FindManyOptions<Product> = {},
-  ): Promise<[Product[], number]> {
-    return this.productRepo.findAndCount(options);
   }
 
   // Buscar producto por id y fabrica
   async findOne(id: string): Promise<Product> {
-    const product = await this.productRepo.findOne({
-      where: { id },
-      relations: ['manufacturer', 'categories'],
-    });
+    const product = await this.productModel.findById(id);
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
@@ -69,73 +52,27 @@ export class ProductsService {
   }
 
   // Crear producto
-  async create(data: CreateProductDTO) {
-    const newProduct = this.productRepo.create(data);
-    if (data.manufacturerId) {
-      const manufacturer = await this.manufacturersService.findOne(
-        data.manufacturerId,
-      );
-      newProduct.manufacturer = manufacturer;
-    }
-    if (data.categoriesId && data.categoriesId.length > 0) {
-      const categories =
-        await this.categoriesService.findMultipleCategoriesByIds(
-          data.categoriesId,
-        );
-      newProduct.categories = categories;
-    }
-    return await this.productRepo.save(newProduct);
-  }
-
-  // Agregar categorías al producto
-  async addCategoryByProduct(productId: string, categoryId: string) {
-    const product = await this.productRepo.findOne({
-      where: { id: productId },
-      relations: ['categories'],
-    });
-    if (!product) {
-      throw new NotFoundException(`Products with ID ${productId} not found`);
-    }
-    const category = await this.categoriesService.findOne(categoryId);
-    product.categories.push(category);
-    return this.productRepo.save(product);
+  create(data: CreateProductDTO) {
+    console.log({ data });
+    const newProduct = new this.productModel(data);
+    return newProduct.save();
   }
 
   // Atualizar producto
   async update(id: string, changes: UpdateProductDTO): Promise<Product> {
-    const product = await this.findOne(id);
-    if (changes.manufacturerId) {
-      const manufacturer = await this.manufacturersService.findOne(
-        changes.manufacturerId,
-      );
-      if (!manufacturer) {
-        throw new NotFoundException(`Manufacturer with ID ${id} not found`);
-      }
-      product.manufacturer = manufacturer;
+    const updatedProduct = await this.productModel
+      .findByIdAndUpdate(id, changes, { new: true })
+      .exec();
+    if (!updatedProduct) {
+      throw new NotFoundException(`Product with ID ${id} not found`);
     }
-    this.productRepo.merge(product, changes);
-    return await this.productRepo.save(product);
-  }
-
-  // Eliminar categoría por producto
-  async removeCategoryByProduct(productId: string, categoryId: string) {
-    const product = await this.productRepo.findOne({
-      where: { id: productId },
-      relations: ['categories'],
-    });
-    if (!product) {
-      throw new NotFoundException(`Products with ID ${productId} not found`);
-    }
-    product.categories = product.categories.filter(
-      (category) => category.id !== categoryId,
-    );
-    return this.productRepo.save(product);
+    return updatedProduct;
   }
 
   // Eliminar producto
   async remove(id: string): Promise<void> {
-    const deleteResult = await this.productRepo.delete(id);
-    if (deleteResult.affected === 0) {
+    const result = await this.productModel.deleteOne({ _id: id }).exec();
+    if (result.deletedCount === 0) {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
   }

@@ -1,4 +1,11 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Product } from './product.entity';
 import { Exclude } from 'class-transformer';
 
@@ -29,7 +36,4 @@ export class Manufacturer {
   @Exclude()
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
-
-  @OneToMany(() => Product, (product) => product.manufacturer)
-  products: Product[]
 }
