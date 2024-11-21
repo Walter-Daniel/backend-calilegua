@@ -1,5 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { Product } from 'src/products/entities/product.entity';
 import {
@@ -11,6 +14,7 @@ import { ManufacturersService } from './manufacturers.service';
 import { CategoriesService } from './categories.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { plainToClass } from 'class-transformer';
 
 @Injectable()
 export class ProductsService {
@@ -18,23 +22,17 @@ export class ProductsService {
     @InjectModel(Product.name) private productModel: Model<Product>,
   ) {}
 
+  private toPlain(doc: Product): Product {
+    return plainToClass(Product, doc.toObject({ getters: true }));
+  }
+
   // Buscar todos los productos
   async findAll(params?: FilterProductDTO) {
-    // if(params){
-    //   const where: FindOptionsWhere<Product> = {};
-    //   const { limit, offset, maxPrice, minPrice } = params;
-    //   if(minPrice && maxPrice) {
-    //     where.price = Between(minPrice, maxPrice);
-    //   }
-    //   return await this.productRepo.find({
-    //     relations: ['manufacturer'],
-    //     take: limit,
-    //     skip: offset
-    //   })
-    // }
-    // return await this.productRepo.find({
-    //   relations: ['manufacturer']
-    // });
+    if (params) {
+      const { limit, offset } = params;
+      return await this.productModel.find().skip(offset).limit(limit).exec();
+    }
+    return await this.productModel.find().exec();
   }
 
   // Filtro utilizando find y like para busqueda parcial de productos por nombre.
@@ -54,7 +52,8 @@ export class ProductsService {
   }
 
   // Crear producto
-  async create(data: CreateProductDTO) {
+  create(data: CreateProductDTO) {
+    console.log({ data });
     const newProduct = new this.productModel(data);
     return newProduct.save();
   }

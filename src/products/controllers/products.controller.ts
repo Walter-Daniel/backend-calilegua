@@ -6,10 +6,15 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { ProductsService } from '../services/products.service';
-import { CreateProductDTO, UpdateProductDTO } from '../dtos/product.dto';
+import {
+  CreateProductDTO,
+  FilterProductDTO,
+  UpdateProductDTO,
+} from '../dtos/product.dto';
 import { MongoIdPipe } from 'src/common/mongo-id.pipe';
 
 @ApiTags('Products')
@@ -19,17 +24,15 @@ export class ProductsController {
   //todo: Create product
   @ApiOperation({ summary: 'Create product' })
   @Post()
-  async createProduct(@Body() payload: CreateProductDTO) {
-    console.log({ payload });
-    const product = await this.productsService.create(payload);
+  createProduct(@Body() payload: CreateProductDTO) {
+    this.productsService.create(payload);
     return {
       ok: true,
       message: 'Product created successfully',
-      product,
     };
   }
 
-  //todo: Update product
+  //   //todo: Update product
   @ApiOperation({ summary: 'Update product' })
   @Put(':productId')
   async updateProduct(
@@ -47,11 +50,11 @@ export class ProductsController {
     };
   }
 
-  //todo: Get all products
+  //   //todo: Get all products
   @ApiOperation({ summary: 'Get all products' })
   @Get()
-  async getAllProducts() {
-    const products = await this.productsService.findAll();
+  async getAllProducts(@Query() params: FilterProductDTO) {
+    const products = await this.productsService.findAll(params);
     return {
       ok: true,
       message: 'All products retrieved successfully',
@@ -59,7 +62,7 @@ export class ProductsController {
     };
   }
 
-  //todo: Get product by id
+  //   //todo: Get product by id
   @ApiOperation({ summary: 'Get product by ID' })
   @Get(':productId')
   async getProductById(@Param('productId', MongoIdPipe) productId: string) {
@@ -71,7 +74,7 @@ export class ProductsController {
     };
   }
 
-  //todo: Delete product by ID
+  //   //todo: Delete product by ID
   @ApiOperation({ summary: 'Delete product' })
   @Delete(':productId')
   async deleteProduct(@Param('productId', MongoIdPipe) productId: string) {
