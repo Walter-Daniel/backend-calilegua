@@ -10,11 +10,9 @@ import {
   FilterProductDTO,
   UpdateProductDTO,
 } from '../dtos/product.dto';
-import { ManufacturersService } from './manufacturers.service';
-import { CategoriesService } from './categories.service';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { plainToClass } from 'class-transformer';
+import { FilterQuery } from 'mongoose';
 
 @Injectable()
 export class ProductsService {
@@ -22,38 +20,33 @@ export class ProductsService {
     @InjectModel(Product.name) private productModel: Model<Product>,
   ) {}
 
-  private toPlain(doc: Product): Product {
-    return plainToClass(Product, doc.toObject({ getters: true }));
-  }
-
   // Buscar todos los productos
-  async findAll(params?: FilterProductDTO) {
-    if (params) {
-      const { limit, offset } = params;
-      return await this.productModel.find().skip(offset).limit(limit).exec();
+  async findAll(params?: FilterProductDTO): Promise<Product[]> {
+    const filters: FilterQuery<Product> = {};
+    const { limit, offset, maxPrice, minPrice } = params;
+    if (maxPrice && minPrice) {
+      filters.price = { $gte: minPrice, $lte: maxPrice };
     }
-    return await this.productModel.find().exec();
+    const products = await this.productModel
+      .find(filters)
+      .sort({ price: 1 })
+      .skip(offset)
+      .limit(limit)
+      .exec();
+    return products.map((product) => product.toObject());
   }
 
-  // Filtro utilizando find y like para busqueda parcial de productos por nombre.
-  async findByName(productName: string): Promise<Product[]> {
-    return await this.productModel.find({
-      where: { name: productName },
-    });
-  }
-
-  // Buscar producto por id y fabrica
+  // Buscar producto por id
   async findOne(id: string): Promise<Product> {
     const product = await this.productModel.findById(id);
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
-    return product;
+    return product.toObject();
   }
 
   // Crear producto
   create(data: CreateProductDTO) {
-    console.log({ data });
     const newProduct = new this.productModel(data);
     return newProduct.save();
   }

@@ -7,11 +7,9 @@ import {
   IsPositive,
   MaxLength,
   IsInt,
-  IsUUID,
-  IsArray,
-  ArrayMinSize,
   IsOptional,
   Min,
+  ValidateIf,
 } from 'class-validator';
 
 export class CreateProductDTO {
@@ -19,7 +17,7 @@ export class CreateProductDTO {
   @IsString()
   @IsNotEmpty()
   @MaxLength(100)
-  readonly name: string; //solo lectura
+  readonly name: string;
 
   @ApiProperty({ description: 'Product description' })
   @IsString()
@@ -59,4 +57,12 @@ export class FilterProductDTO {
   @IsOptional()
   @Min(0)
   offset: number;
+
+  @IsOptional()
+  @Min(0)
+  minPrice: number;
+
+  @ValidateIf((params) => params.minPrice)
+  @IsPositive()
+  maxPrice: number;
 }

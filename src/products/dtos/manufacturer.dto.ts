@@ -1,9 +1,5 @@
 import { OmitType, PartialType } from '@nestjs/mapped-types';
-import {
-  IsNotEmpty,
-  IsString,
-  IsUrl,
-} from 'class-validator';
+import { IsNotEmpty, IsString, IsUrl } from 'class-validator';
 
 export class CreateManufacturerDTO {
   @IsString()
