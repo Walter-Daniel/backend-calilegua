@@ -1,10 +1,20 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
-@Schema()
+@Schema({
+  collection: 'products',
+  toObject: {
+    virtuals: true,
+    versionKey: false,
+    transform: (_doc, ret) => {
+      ret.id = ret._id.toString();
+      delete ret._id;
+    },
+  },
+})
 export class Product extends Document {
   // Un máximo de 100 caracteres por nombre, por si son descriptivos.
-  @Prop({ required: true })
+  @Prop({ required: true, unique: true })
   name: string;
 
   // El tipado text permite descripciones largas
@@ -12,8 +22,7 @@ export class Product extends Document {
   description: string;
 
   // Precisión para decimales en precios. 10 indica los dígitos totales y 2 la cantidad de decimales.
-
-  @Prop({ type: 'Number' })
+  @Prop({ type: 'Number', index: true })
   price: number;
 
   // Se asignan enteros para el stock.
@@ -30,3 +39,4 @@ export class Product extends Document {
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
+ProductSchema.index({ price: 1 }); //Se oridena por precio ascendente

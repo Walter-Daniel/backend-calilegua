@@ -42,11 +42,9 @@
     "mongodb": "^5.9.2",
     "mongoose": "^8.8.2",
     "mysql2": "^3.11.3",
-    "pg": "^8.13.0",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
-    "swagger-ui-express": "^5.0.1",
-    "typeorm": "^0.3.20"
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
@@ -56,7 +54,6 @@
     "@types/jest": "^29.5.2",
     "@types/mongodb": "^4.0.6",
     "@types/node": "^20.3.1",
-    "@types/pg": "^8.11.10",
     "@types/supertest": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",

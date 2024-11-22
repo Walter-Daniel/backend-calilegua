@@ -16,6 +16,6 @@ import { Product, ProductSchema } from './entities/product.entity';
   ],
   controllers: [ProductsController],
   providers: [ProductsService],
-  exports: [ProductsService, MongooseModule],
+  exports: [ProductsService],
 })
 export class ProductsModule {}

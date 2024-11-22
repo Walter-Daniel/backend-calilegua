@@ -2,13 +2,11 @@ import { Module } from '@nestjs/common';
 import { MongoClient } from 'mongodb';
 
 import { ConfigModule } from '@nestjs/config';
-import { HttpModule, HttpService } from '@nestjs/axios';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { ProductsModule } from './products/products.module';
-import { OperatorsModule } from './operators/operators.module';
 import { DatabaseModule } from './database/database.module';
 import { enviroments } from './enviroments';
 import config from './config';

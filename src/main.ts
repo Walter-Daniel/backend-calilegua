@@ -4,14 +4,15 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
+  const port = +process.env.DB_PORT || 3000;
   const app = await NestFactory.create(AppModule);
   app.useGlobalPipes(
     new ValidationPipe({
-      whitelist: true, // evita campos extras en el Payload al crear
+      whitelist: true,
       forbidNonWhitelisted: true,
       //disableErrorMessages: true,
       transformOptions: {
-        enableImplicitConversion: true, //Convierte si existe cadena de caracter numericos
+        enableImplicitConversion: true,
       },
     }),
   );
@@ -27,6 +28,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
 
-  await app.listen(process.env.DB_PORT || 3003);
+  await app.listen(port, () => {
+    console.log(`Aplicación corriendo en el puerto: ${port}`);
+  });
+
+  console.log(`Application is running on: http://localhost:${port}`);
 }
 bootstrap();

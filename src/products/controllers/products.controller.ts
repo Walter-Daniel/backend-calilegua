@@ -74,7 +74,7 @@ export class ProductsController {
     };
   }
 
-  //   //todo: Delete product by ID
+  //todo: Delete product by ID
   @ApiOperation({ summary: 'Delete product' })
   @Delete(':productId')
   async deleteProduct(@Param('productId', MongoIdPipe) productId: string) {

@@ -7,7 +7,6 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { Product } from './product.entity';
 import { Exclude } from 'class-transformer';
 
 @Entity()
@@ -16,7 +15,6 @@ export class Category {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // Un máximo de 150 caracteres por nombre, por si son descriptivos.
   @Column({ type: 'varchar', length: 150, unique: true })
   name: string;
 
