@@ -1,4 +1,4 @@
-import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Schema, Prop, SchemaFactory, raw } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
 @Schema({
@@ -36,6 +36,13 @@ export class Product extends Document {
   // Si la URL es una cadena de texto larga, la mejor opción es text.
   @Prop()
   image: string;
+
+  @Prop(
+    raw({
+      name: { type: String },
+    }),
+  )
+  additonalFeatures: Record<string, any>;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
