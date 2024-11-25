@@ -29,6 +29,7 @@ export class ProductsService {
     }
     const products = await this.productModel
       .find(filters)
+      .populate('manufacturer')
       .sort({ price: 1 })
       .skip(offset)
       .limit(limit)
