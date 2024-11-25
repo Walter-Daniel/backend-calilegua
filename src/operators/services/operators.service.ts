@@ -40,32 +40,32 @@ export class OperatorsService {
     return operator;
   }
 
-  async create(data: CreateOperatorDTO) {
-    const newOperator = this.operatorRepo.create(data);
-    if (data.purchaserId) {
-      const purchaser = await this.purchaserService.findOne(data.purchaserId);
-      newOperator.purchaser = purchaser;
-    }
-    return await this.operatorRepo.save(newOperator);
-  }
+  // async create(data: CreateOperatorDTO) {
+  //   const newOperator = this.operatorRepo.create(data);
+  //   if (data.purchaserId) {
+  //     const purchaser = await this.purchaserService.findOne(data.purchaserId);
+  //     newOperator.purchaser = purchaser;
+  //   }
+  //   return await this.operatorRepo.save(newOperator);
+  // }
 
-  async update(id: string, changes: UpdateOperatorDTO) {
-    const operator = await this.findOne(id);
-    if (!operator) {
-      throw new NotFoundException(`Operator with id ${id} not found`);
-    }
+  // async update(id: string, changes: UpdateOperatorDTO) {
+  //   const operator = await this.findOne(id);
+  //   if (!operator) {
+  //     throw new NotFoundException(`Operator with id ${id} not found`);
+  //   }
 
-    if(changes.purchaserId){
-      const newPurchaser = await this.purchaserService.findOne(changes.purchaserId);
-      if (!newPurchaser) {
-        throw new NotFoundException(`Purchaser with id ${changes.purchaserId} not found`);
-      }
-      operator.purchaser = newPurchaser;
-    }
+  //   if(changes.purchaserId){
+  //     const newPurchaser = await this.purchaserService.findOne(changes.purchaserId);
+  //     if (!newPurchaser) {
+  //       throw new NotFoundException(`Purchaser with id ${changes.purchaserId} not found`);
+  //     }
+  //     operator.purchaser = newPurchaser;
+  //   }
 
-    const operatorToUpdate = this.operatorRepo.merge(operator, changes)
-    return await this.operatorRepo.save(operatorToUpdate);
-  }
+  //   const operatorToUpdate = this.operatorRepo.merge(operator, changes)
+  //   return await this.operatorRepo.save(operatorToUpdate);
+  // }
 
   async remove(id: string) {
     const deleteResult = await this.operatorRepo.delete(id);

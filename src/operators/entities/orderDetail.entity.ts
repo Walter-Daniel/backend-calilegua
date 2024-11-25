@@ -28,10 +28,4 @@ export class OrderDetail {
   @Exclude()
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
-
-  @ManyToOne(() => Product)
-  product: Product;
-
-  @ManyToOne(() => Order, (order) => order.details)
-  order: Order;
 }

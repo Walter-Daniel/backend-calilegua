@@ -9,10 +9,10 @@ import {
   Min,
   IsPositive,
   ValidateIf,
+  IsArray,
 } from 'class-validator';
 
 export class CreatePurchaserDTO {
-
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -39,14 +39,9 @@ export class CreatePurchaserDTO {
   @IsNotEmpty()
   readonly email: string;
 
-  @ApiProperty({ required: false })
-  @IsString()
-  @IsOptional()
-  readonly address?: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  readonly operatorId?: string;
+  @IsArray()
+  @IsNotEmpty()
+  readonly addresses: any;
 }
 
 export class UpdatePurchaserDTO extends PartialType(CreatePurchaserDTO) {}
@@ -59,7 +54,7 @@ export class FilterPurchaserDTO {
   @IsOptional()
   @Min(0)
   offset: number;
-  
+
   @IsOptional()
   @IsPositive()
   minAge: number;

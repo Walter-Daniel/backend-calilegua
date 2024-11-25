@@ -32,7 +32,7 @@ export class Operator {
   @Column({
     type: 'enum',
     enum: OperatorRole,
-    default: OperatorRole.STAFF
+    default: OperatorRole.STAFF,
   })
   role: OperatorRole;
 
@@ -48,16 +48,8 @@ export class Operator {
   @Exclude()
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
-  
+
   @Exclude()
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
-
-  @OneToOne(() => Purchaser, (purchaser) => purchaser.operator, {
-    nullable: true,
-  })
-  @JoinColumn({
-    name: 'purchaser_id'
-  })
-  purchaser: Purchaser;
 }
