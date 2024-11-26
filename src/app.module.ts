@@ -8,6 +8,8 @@ import { AppService } from './app.service';
 
 import { ProductsModule } from './products/products.module';
 import { DatabaseModule } from './database/database.module';
+import { OperatorsModule } from './operators/operators.module';
+
 import { enviroments } from './enviroments';
 import config from './config';
 
@@ -52,7 +54,7 @@ const uri = 'mongodb://walter:123456@localhost:27017/?authMechanism=DEFAULT';
       }),
     }),
     ProductsModule,
-    // OperatorsModule,
+    OperatorsModule,
     DatabaseModule,
   ],
   controllers: [AppController],

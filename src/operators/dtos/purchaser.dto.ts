@@ -1,5 +1,5 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsNotEmpty,
   IsString,
@@ -9,10 +9,12 @@ import {
   Min,
   IsPositive,
   ValidateIf,
+  IsArray,
+  ValidateNested,
 } from 'class-validator';
+import { CreateAddressDTO } from './address.dto';
 
 export class CreatePurchaserDTO {
-
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
@@ -39,14 +41,11 @@ export class CreatePurchaserDTO {
   @IsNotEmpty()
   readonly email: string;
 
-  @ApiProperty({ required: false })
-  @IsString()
-  @IsOptional()
-  readonly address?: string;
-
-  @ApiProperty({ required: false })
-  @IsOptional()
-  readonly operatorId?: string;
+  @IsArray()
+  @IsNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => CreateAddressDTO)
+  readonly addresses: CreateAddressDTO[];
 }
 
 export class UpdatePurchaserDTO extends PartialType(CreatePurchaserDTO) {}
@@ -59,7 +58,7 @@ export class FilterPurchaserDTO {
   @IsOptional()
   @Min(0)
   offset: number;
-  
+
   @IsOptional()
   @IsPositive()
   minAge: number;

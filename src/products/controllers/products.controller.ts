@@ -21,7 +21,7 @@ import { MongoIdPipe } from 'src/common/mongo-id.pipe';
 @Controller('products')
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
-  //todo: Create product
+
   @ApiOperation({ summary: 'Create product' })
   @Post()
   createProduct(@Body() payload: CreateProductDTO) {
@@ -32,7 +32,6 @@ export class ProductsController {
     };
   }
 
-  //   //todo: Update product
   @ApiOperation({ summary: 'Update product' })
   @Put(':productId')
   async updateProduct(
@@ -50,7 +49,6 @@ export class ProductsController {
     };
   }
 
-  //   //todo: Get all products
   @ApiOperation({ summary: 'Get all products' })
   @Get()
   async getAllProducts(@Query() params: FilterProductDTO) {
@@ -62,7 +60,6 @@ export class ProductsController {
     };
   }
 
-  //   //todo: Get product by id
   @ApiOperation({ summary: 'Get product by ID' })
   @Get(':productId')
   async getProductById(@Param('productId', MongoIdPipe) productId: string) {
@@ -74,7 +71,6 @@ export class ProductsController {
     };
   }
 
-  //todo: Delete product by ID
   @ApiOperation({ summary: 'Delete product' })
   @Delete(':productId')
   async deleteProduct(@Param('productId', MongoIdPipe) productId: string) {

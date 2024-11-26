@@ -10,7 +10,10 @@ import {
   IsOptional,
   Min,
   ValidateIf,
+  ValidateNested,
+  IsMongoId,
 } from 'class-validator';
+import { CreateAdditionalFeatures } from './additionalFeatures.dto';
 
 export class CreateProductDTO {
   @ApiProperty({ description: 'Product name' })
@@ -45,6 +48,15 @@ export class CreateProductDTO {
   @IsUrl()
   @IsNotEmpty()
   readonly image: string;
+
+  @IsNotEmpty()
+  @ValidateNested()
+  @ApiProperty()
+  readonly additionalFeature: CreateAdditionalFeatures;
+
+  @IsNotEmpty()
+  @IsMongoId()
+  readonly manufacturer: string;
 }
 
 export class UpdateProductDTO extends PartialType(CreateProductDTO) {}

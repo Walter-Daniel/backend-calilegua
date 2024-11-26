@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 
 import { Product } from 'src/products/entities/product.entity';
 import {
@@ -29,6 +25,7 @@ export class ProductsService {
     }
     const products = await this.productModel
       .find(filters)
+      .populate('manufacturer')
       .sort({ price: 1 })
       .skip(offset)
       .limit(limit)

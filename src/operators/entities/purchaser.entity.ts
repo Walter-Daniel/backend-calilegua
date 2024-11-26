@@ -1,47 +1,43 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToOne, OneToMany, Check } from 'typeorm';
-import { Operator } from './operator.entity';
-import { Order } from './order.entity';
-import { Exclude } from 'class-transformer';
 import { Min } from 'class-validator';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document, Types } from 'mongoose';
+import { Exclude, Transform } from 'class-transformer';
+import { Address, AddressSchema } from './address.entity';
 
-@Entity()
-@Check(`"age" >= 18`)
+@Schema()
 export class Purchaser {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @Transform(({ value }) => value.toString())
+  _id: Types.ObjectId;
 
-  @Column({ length: 100 })
+  @Prop({ required: true, unique: true })
   name: string;
 
-  @Column({ length: 100 })
+  @Prop()
   lastname: string;
 
-  @Column({ type: 'int' })
-  @Min(18, { message: 'Purchaser must be at least 18 years old' })
+  @Prop({ type: 'Number', min: 18 })
   age: number;
 
-  @Column({ length: 20 })
+  @Prop()
   phone: string;
 
-  @Column({ length: 100, unique: true })
+  @Prop()
   email: string;
 
-  @Column({ type: 'text', nullable: true })
-  address: string;
-
-  @Exclude()
-  @CreateDateColumn({ type: 'timestamp' })
-  createdAt: Date;
-
-  @Exclude()
-  @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt: Date;
-
-  @OneToOne(() => Operator, (operator) => operator.purchaser, {
-    nullable: true
+  @Prop({
+    type: [AddressSchema],
   })
-  operator: Operator;
+  @Transform(({ value }) =>
+    value.map((address: Address) => ({
+      ...address,
+      _id: address._id.toString(),
+    })),
+  )
+  addresses: Types.Array<Address>;
 
-  @OneToMany(() => Order, (order) => order.purchaser)
-  order: Order[];
+  @Exclude()
+  __v: number;
 }
+
+export type PurchaserDocument = Purchaser & Document;
+export const PurchaserSchema = SchemaFactory.createForClass(Purchaser);

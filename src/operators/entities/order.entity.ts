@@ -1,4 +1,11 @@
-import { CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { Purchaser } from './purchaser.entity';
 import { OrderDetail } from './orderDetail.entity';
 
@@ -12,10 +19,4 @@ export class Order {
 
   @UpdateDateColumn({ type: 'timestamp' })
   updatedAt: Date;
-
-  @ManyToOne(() => Purchaser, (purchaser) => purchaser.order)
-  purchaser: Purchaser;
-
-  @OneToMany(() => OrderDetail, (details) => details.order)
-  details: OrderDetail[];
 }
