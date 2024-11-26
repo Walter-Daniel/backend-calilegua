@@ -12,7 +12,7 @@ import {
   FilterPurchaserDTO,
   UpdatePurchaserDTO,
 } from '../dtos/purchaser.dto';
-import { plainToClass } from 'class-transformer';
+import { plainToClass, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class PurchasersService {
@@ -49,7 +49,9 @@ export class PurchasersService {
     }
     const newPurchaser = new this.purchaserModel(data);
     const purchaser = await newPurchaser.save();
-    return purchaser.toObject();
+    const purchaserObject = purchaser.toObject();
+
+    return plainToInstance(Purchaser, purchaserObject);
   }
 
   async update(id: string, changes: UpdatePurchaserDTO) {

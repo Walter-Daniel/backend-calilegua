@@ -2,6 +2,7 @@ import { Min } from 'class-validator';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { Exclude, Transform } from 'class-transformer';
+import { Address, AddressSchema } from './address.entity';
 
 @Schema()
 export class Purchaser {
@@ -14,8 +15,7 @@ export class Purchaser {
   @Prop()
   lastname: string;
 
-  @Prop({ type: 'Number' })
-  @Min(18, { message: 'Purchaser must be at least 18 years old' })
+  @Prop({ type: 'Number', min: 18 })
   age: number;
 
   @Prop()
@@ -24,19 +24,16 @@ export class Purchaser {
   @Prop()
   email: string;
 
-  @Prop()
-  address: string;
-
   @Prop({
-    type: [
-      {
-        street: { type: String },
-        number: { type: String },
-        city: { type: String },
-      },
-    ],
+    type: [AddressSchema],
   })
-  addresses: Types.Array<Record<string, any>>;
+  @Transform(({ value }) =>
+    value.map((address: Address) => ({
+      ...address,
+      _id: address._id.toString(),
+    })),
+  )
+  addresses: Types.Array<Address>;
 
   @Exclude()
   __v: number;
