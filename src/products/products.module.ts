@@ -26,6 +26,9 @@ import { ManufacturersService } from './services/manufacturers.service';
   ],
   controllers: [ProductsController, ManufacturersController],
   providers: [ProductsService, ManufacturersService],
-  exports: [ProductsService],
+  exports: [
+    ProductsService,
+    MongooseModule.forFeature([{ name: Product.name, schema: ProductSchema }]),
+  ],
 })
 export class ProductsModule {}

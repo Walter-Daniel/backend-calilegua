@@ -26,12 +26,6 @@ export class Purchaser {
   @Prop({
     type: [AddressSchema],
   })
-  @Transform(({ value }) =>
-    value.map((address: Address) => ({
-      ...address,
-      _id: address._id.toString(),
-    })),
-  )
   addresses: Types.Array<Address>;
 
   @Exclude()
