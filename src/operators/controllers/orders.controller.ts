@@ -4,7 +4,6 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Post,
   Put,
 } from '@nestjs/common';
@@ -50,33 +49,13 @@ export class OrdersController {
     @Param('id') id: string,
     @Param('productId') productId: string,
   ) {
-    await this.ordersService.removeProducts(id, productId);
+    const order = await this.ordersService.removeProducts(id, productId);
     return {
       ok: true,
-      message: 'Order deleted successfully',
+      message: 'Product deleted successfully',
+      order,
     };
   }
-  // @Put(':orderId')
-  // async updateOrder(
-  //     @Param('orderId') orderId: string,
-  //     @Body() body: UpdateOrderDTO,
-  // ) {
-  //     const orderToUpdate = await this.ordersService.update(orderId, body)
-  //     return {
-  //         ok: true,
-  //         message: 'Order updated successfully',
-  //         order: orderToUpdate
-  //     };
-  // }
-
-  // @Delete(':orderId')
-  // async deleteOrder(@Param('orderId') orderId: string) {
-  //   await this.ordersService.remove(orderId);
-  //   return {
-  //     ok: true,
-  //     message: 'Order deleted successfully',
-  //   };
-  // }
 
   @Get()
   async getOrders() {
@@ -88,14 +67,4 @@ export class OrdersController {
       orders,
     };
   }
-
-  // @Get(':orderId')
-  // async getOrderById(@Param('orderId') orderId: string) {
-  //   const order = await this.ordersService.findOne(orderId);
-  //   return {
-  //     ok: true,
-  //     message: `Order with ID ${orderId} retrieved successfully`,
-  //     order,
-  //   };
-  // }
 }

@@ -27,6 +27,7 @@ export class OrdersService {
 
   async addProducts(id: string, productsIds: string[]) {
     const order = await this.orderModel.findById(id);
+    console.log({ productsIds, id, order });
     productsIds.forEach((pId) => order.products.push(pId));
     return order.save();
   }
@@ -34,6 +35,8 @@ export class OrdersService {
   async removeProducts(id: string, productId: string) {
     const order = await this.orderModel.findById(id);
     order.products.pull(productId);
-    return order;
+
+    // Guarda los cambios
+    return await order.save();
   }
 }

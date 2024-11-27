@@ -27,8 +27,8 @@ export class Product extends Document {
   @Prop()
   image: string;
 
-  @Prop({ type: Types.ObjectId, ref: Category.name })
-  categoria: Category | Types.ObjectId;
+  // @Prop({ type: Types.ObjectId, ref: Category.name })
+  // categoria: Category | Types.ObjectId;
 
   @Prop({ type: [AdditionalFeaturesSchema] })
   additionalFeatures: Types.Array<AdditionalFeatures>;

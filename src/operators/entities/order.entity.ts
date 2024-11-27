@@ -6,9 +6,6 @@ import { Purchaser } from './purchaser.entity';
 
 @Schema()
 export class Order extends Document {
-  // @Transform(({ value }) => value.toString())
-  // _id: Types.ObjectId;
-
   @Prop({
     type: [{ type: Types.ObjectId, ref: Purchaser.name, required: true }],
   })
