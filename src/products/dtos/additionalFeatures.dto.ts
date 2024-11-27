@@ -1,14 +1,18 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
-export class CreateAdditionalFeatures {
-  @ApiProperty({ description: 'Additional feature' })
+export class CreateAdditionalFeaturesDTO {
+  @ApiProperty({ description: 'Additional feature name' })
   @IsString()
   @IsNotEmpty()
-  @MaxLength(100)
   readonly name: string;
+
+  @ApiProperty({ description: 'Additional feature description' })
+  @IsString()
+  @IsNotEmpty()
+  readonly description: string;
 }
 
-export class UpdateAdditionalFeatures extends PartialType(
-  CreateAdditionalFeatures,
+export class UpdateAdditionalFeaturesDTO extends PartialType(
+  CreateAdditionalFeaturesDTO,
 ) {}

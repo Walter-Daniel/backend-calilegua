@@ -1,34 +1,19 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { Exclude } from 'class-transformer';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Document } from 'mongoose';
 
-@Entity()
-export class Manufacturer {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
-  @Column({ length: 100 })
+@Schema()
+export class Manufacturer extends Document {
+  @Prop()
   name: string;
 
-  @Column({ type: 'text' })
+  @Prop()
   address: string;
 
-  @Column({ length: 150 })
+  @Prop()
   email: string;
 
-  @Column({ type: 'text' })
+  @Prop()
   image: string;
-
-  @Exclude()
-  @CreateDateColumn({ type: 'timestamp' })
-  createdAt: Date;
-
-  @Exclude()
-  @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt: Date;
 }
+
+export const ManufacturerSchema = SchemaFactory.createForClass(Manufacturer);

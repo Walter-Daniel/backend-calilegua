@@ -1,6 +1,6 @@
+import { Document, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Exclude, Transform } from 'class-transformer';
-import { Document, Types } from 'mongoose';
 
 @Schema()
 export class Address extends Document {

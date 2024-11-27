@@ -26,6 +26,7 @@ export class ProductsController {
   @Post()
   createProduct(@Body() payload: CreateProductDTO) {
     this.productsService.create(payload);
+    console.log('desde controller:', payload);
     return {
       ok: true,
       message: 'Product created successfully',

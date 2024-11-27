@@ -1,53 +1,41 @@
-import { Schema, Prop, SchemaFactory, raw } from '@nestjs/mongoose';
+import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { Manufacturer } from './manufacturer.entity';
+import {
+  AdditionalFeatures,
+  AdditionalFeaturesSchema,
+} from './additionalFeatures.entity';
+import { Category } from './category.entity';
 
-@Schema({
-  collection: 'products',
-  toObject: {
-    virtuals: true,
-    versionKey: false,
-    transform: (_doc, ret) => {
-      ret.id = ret._id.toString();
-      delete ret._id;
-    },
-  },
-})
+@Schema({})
 export class Product extends Document {
-  // Un máximo de 100 caracteres por nombre, por si son descriptivos.
   @Prop({ required: true, unique: true })
   name: string;
 
-  // El tipado text permite descripciones largas
   @Prop()
   description: string;
 
-  // Precisión para decimales en precios. 10 indica los dígitos totales y 2 la cantidad de decimales.
   @Prop({ type: 'Number', index: true })
   price: number;
 
-  // Se asignan enteros para el stock.
   @Prop({ type: 'Number' })
   stock: number;
 
-  // Longitud razonable para nombres de origen (país o ciudad).
   @Prop()
   origin: string;
 
-  // Si la URL es una cadena de texto larga, la mejor opción es text.
   @Prop()
   image: string;
 
-  @Prop(
-    raw({
-      name: { type: String },
-    }),
-  )
-  additonalFeatures: Record<string, any>;
+  @Prop({ type: Types.ObjectId, ref: Category.name })
+  categoria: Category | Types.ObjectId;
+
+  @Prop({ type: [AdditionalFeaturesSchema] })
+  additionalFeatures: Types.Array<AdditionalFeatures>;
 
   @Prop({ type: Types.ObjectId, ref: Manufacturer.name })
   manufacturer: Manufacturer | Types.ObjectId;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
-ProductSchema.index({ price: 1 }); //Se oridena por precio ascendente
+ProductSchema.index({ price: 1 }); //Ordena por precio ascendente

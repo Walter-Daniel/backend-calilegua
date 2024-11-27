@@ -1,4 +1,3 @@
-import { Min } from 'class-validator';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { Exclude, Transform } from 'class-transformer';

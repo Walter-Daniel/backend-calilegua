@@ -12,7 +12,6 @@ import {
   FilterPurchaserDTO,
   UpdatePurchaserDTO,
 } from '../dtos/purchaser.dto';
-import { plainToClass, plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class PurchasersService {
@@ -29,10 +28,9 @@ export class PurchasersService {
     const purchasers = await this.purchaserModel
       .find(filters)
       .skip(offset)
-      .lean()
       .limit(limit)
       .exec();
-    return purchasers.map((purchaser) => plainToClass(Purchaser, purchaser));
+    return purchasers;
   }
 
   async findOne(id: string) {
@@ -48,10 +46,7 @@ export class PurchasersService {
       throw new BadRequestException('Purchaser must be at least 18 years old');
     }
     const newPurchaser = new this.purchaserModel(data);
-    const purchaser = await newPurchaser.save();
-    const purchaserObject = purchaser.toObject();
-
-    return plainToInstance(Purchaser, purchaserObject);
+    return await newPurchaser.save();
   }
 
   async update(id: string, changes: UpdatePurchaserDTO) {
