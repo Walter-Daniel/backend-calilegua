@@ -12,8 +12,10 @@ import {
   ValidateIf,
   ValidateNested,
   IsMongoId,
+  IsArray,
 } from 'class-validator';
-import { CreateAdditionalFeatures } from './additionalFeatures.dto';
+import { Type } from 'class-transformer';
+import { CreateAdditionalFeaturesDTO } from './additionalFeatures.dto';
 
 export class CreateProductDTO {
   @ApiProperty({ description: 'Product name' })
@@ -49,10 +51,12 @@ export class CreateProductDTO {
   @IsNotEmpty()
   readonly image: string;
 
+  // @ApiProperty()
   @IsNotEmpty()
-  @ValidateNested()
-  @ApiProperty()
-  readonly additionalFeature: CreateAdditionalFeatures;
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => CreateAdditionalFeaturesDTO)
+  readonly additionalFeatures: CreateAdditionalFeaturesDTO[];
 
   @IsNotEmpty()
   @IsMongoId()

@@ -44,6 +44,10 @@ export class ProductsService {
 
   // Crear producto
   create(data: CreateProductDTO) {
+    console.log(
+      data,
+      'DESDE SERVICIOOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS',
+    );
     const newProduct = new this.productModel(data);
     return newProduct.save();
   }

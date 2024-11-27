@@ -1,22 +1,24 @@
-import {
-  CreateDateColumn,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Transform } from 'class-transformer';
+import { Document, Types } from 'mongoose';
+import { Product } from 'src/products/entities/product.entity';
 import { Purchaser } from './purchaser.entity';
-import { OrderDetail } from './orderDetail.entity';
 
-@Entity()
-export class Order {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+@Schema()
+export class Order extends Document {
+  // @Transform(({ value }) => value.toString())
+  // _id: Types.ObjectId;
 
-  @CreateDateColumn({ type: 'timestamp' })
-  createdAt: Date;
+  @Prop({
+    type: [{ type: Types.ObjectId, ref: Purchaser.name, required: true }],
+  })
+  purchaser: Purchaser | Types.ObjectId;
 
-  @UpdateDateColumn({ type: 'timestamp' })
-  updatedAt: Date;
+  @Prop({ type: [{ type: Types.ObjectId, ref: Product.name }] })
+  products: Types.Array<Product>;
+
+  @Prop({ type: Date })
+  date: Date;
 }
+
+export const OrderSchema = SchemaFactory.createForClass(Order);
