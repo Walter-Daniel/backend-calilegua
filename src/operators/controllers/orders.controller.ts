@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { OrdersService } from '../services/orders.service';
 import {
-  AddProtuctToOrderDTO,
+  AddProductToOrderDTO,
   CreateOrderDTO,
   UpdateOrderDTO,
 } from '../dtos/order.dto';
@@ -31,11 +31,11 @@ export class OrdersController {
   @Put(':id/products')
   async addProducts(
     @Param('id') id: string,
-    @Body() payload: AddProtuctToOrderDTO,
+    @Body() payload: AddProductToOrderDTO,
   ) {
-    const orderToUpdate = await this.ordersService.addProducts(
+    const orderToUpdate = await this.ordersService.addProductToOrder(
       id,
-      payload.productsIds,
+      payload,
     );
     return {
       ok: true,

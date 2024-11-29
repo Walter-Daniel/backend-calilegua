@@ -1,21 +1,22 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Transform } from 'class-transformer';
 import { Document, Types } from 'mongoose';
-import { Product } from 'src/products/entities/product.entity';
 import { Purchaser } from './purchaser.entity';
+import { OrderDetail } from './orderDetail.entity';
 
 @Schema()
 export class Order extends Document {
   @Prop({
-    type: [{ type: Types.ObjectId, ref: Purchaser.name, required: true }],
+    type: Types.ObjectId,
+    ref: Purchaser.name,
+    required: true,
   })
   purchaser: Purchaser | Types.ObjectId;
 
-  @Prop({ type: [{ type: Types.ObjectId, ref: Product.name }] })
-  products: Types.Array<Product>;
+  @Prop({ type: Types.ObjectId, ref: OrderDetail.name, required: true })
+  detail: OrderDetail | Types.ObjectId;
 
-  @Prop({ type: Date })
-  date: Date;
+  @Prop({ type: Date, default: Date.now })
+  createAt: Date;
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

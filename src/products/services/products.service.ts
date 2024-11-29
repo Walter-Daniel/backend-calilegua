@@ -30,7 +30,7 @@ export class ProductsService {
       .skip(offset)
       .limit(limit)
       .exec();
-    return products.map((product) => product.toObject());
+    return products;
   }
 
   // Buscar producto por id
@@ -39,17 +39,13 @@ export class ProductsService {
     if (!product) {
       throw new NotFoundException(`Product with ID ${id} not found`);
     }
-    return product.toObject();
+    return product;
   }
 
   // Crear producto
-  create(data: CreateProductDTO) {
-    console.log(
-      data,
-      'DESDE SERVICIOOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS',
-    );
+  async create(data: CreateProductDTO) {
     const newProduct = new this.productModel(data);
-    return newProduct.save();
+    return await newProduct.save();
   }
 
   // Atualizar producto
