@@ -9,6 +9,7 @@ import { ProductsModule } from 'src/products/products.module';
 import { Order, OrderSchema } from './entities/order.entity';
 import { OrdersController } from './controllers/orders.controller';
 import { OrdersService } from './services/orders.service';
+import { OrderDetail, OrderDetailSchema } from './entities/orderDetail.entity';
 
 @Module({
   imports: [
@@ -20,6 +21,10 @@ import { OrdersService } from './services/orders.service';
       {
         name: Order.name,
         schema: OrderSchema,
+      },
+      {
+        name: OrderDetail.name,
+        schema: OrderDetailSchema,
       },
     ]),
     ProductsModule,

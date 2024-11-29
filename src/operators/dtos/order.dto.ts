@@ -1,30 +1,46 @@
 import { PartialType } from '@nestjs/mapped-types';
-import { ApiProperty, OmitType } from '@nestjs/swagger';
-import { IsArray, IsDate, IsMongoId, IsNotEmpty } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsMongoId,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  Min,
+  ValidateNested,
+} from 'class-validator';
+
+export class CreateOrderItemDTO {
+  @IsNotEmpty()
+  @IsMongoId()
+  productId: string;
+
+  @IsNotEmpty()
+  @IsNumber()
+  @Min(1)
+  quantity: number;
+}
 
 export class CreateOrderDTO {
-  @ApiProperty({ description: 'Order date' })
-  @IsNotEmpty()
-  @IsDate()
-  readonly date: Date;
-
   @ApiProperty({ description: 'Purchaser ID' })
   @IsNotEmpty()
   @IsMongoId()
-  readonly purchaser: string;
+  readonly purchaserId: string;
 
-  @ApiProperty({ description: 'Order products' })
   @IsArray()
-  @IsNotEmpty()
-  readonly products: string[];
+  @ValidateNested({ each: true })
+  @Type(() => CreateOrderItemDTO)
+  items: CreateOrderItemDTO[];
 }
 
-export class UpdateOrderDTO extends PartialType(
-  OmitType(CreateOrderDTO, ['products']),
-) {}
+export class UpdateOrderDTO extends PartialType(CreateOrderDTO) {}
 
-export class AddProtuctToOrderDTO {
-  @IsArray()
-  @IsNotEmpty()
-  readonly productsIds: string[];
+export class AddProductToOrderDTO {
+  @IsMongoId()
+  @IsString()
+  productId: string;
+
+  @IsNumber()
+  quantity: number;
 }
