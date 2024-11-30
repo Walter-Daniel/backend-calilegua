@@ -1,6 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 
+export enum OperatorRole {
+  PURCHASER = 'purchaser',
+  SELLER = 'seller',
+  ADMIN = 'admin',
+}
+
 @Schema()
 export class Operator extends Document {
   @Prop()
@@ -14,6 +20,9 @@ export class Operator extends Document {
 
   @Prop()
   lastname: string;
+
+  @Prop({ type: String, enum: OperatorRole, default: OperatorRole.PURCHASER })
+  role: OperatorRole;
 }
 
 export const OperatorSchema = SchemaFactory.createForClass(Operator);
