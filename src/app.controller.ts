@@ -23,7 +23,7 @@ export class AppController {
     return 'Probando...';
   }
 
-  @SetMetadata('isPublic', true)
+  // @SetMetadata('isPublic', true)
   @Get('nuevo')
   publica(): string {
     return 'Holaaaaa';

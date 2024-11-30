@@ -38,5 +38,6 @@ import { Operator, OperatorSchema } from './entities/operators.entity';
   ],
   controllers: [PurchasersController, OrdersController, OperatorsController],
   providers: [PurchasersService, OrdersService, OperatorsService],
+  exports: [OperatorsService],
 })
 export class OperatorsModule {}
