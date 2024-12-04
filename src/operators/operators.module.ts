@@ -38,6 +38,14 @@ import { Operator, OperatorSchema } from './entities/operators.entity';
   ],
   controllers: [PurchasersController, OrdersController, OperatorsController],
   providers: [PurchasersService, OrdersService, OperatorsService],
-  exports: [OperatorsService],
+  exports: [
+    OperatorsService,
+    MongooseModule.forFeature([
+      {
+        name: Order.name,
+        schema: OrderSchema,
+      },
+    ]),
+  ],
 })
 export class OperatorsModule {}

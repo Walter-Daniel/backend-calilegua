@@ -12,6 +12,7 @@ import { OperatorsModule } from './operators/operators.module';
 
 import { enviroments } from './enviroments';
 import { AuthModule } from './auth/auth.module';
+import { ReportsModule } from './reports/reports.module';
 import config from './config';
 
 import * as Joi from 'joi';
@@ -58,6 +59,7 @@ const uri = 'mongodb://walter:123456@localhost:27017/?authMechanism=DEFAULT';
     OperatorsModule,
     DatabaseModule,
     AuthModule,
+    ReportsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

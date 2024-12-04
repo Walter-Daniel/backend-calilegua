@@ -5,9 +5,6 @@ import { Address, AddressSchema } from './address.entity';
 
 @Schema()
 export class Purchaser {
-  @Transform(({ value }) => value.toString())
-  _id: Types.ObjectId;
-
   @Prop({ required: true, unique: true })
   name: string;
 
