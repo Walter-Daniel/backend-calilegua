@@ -22,7 +22,14 @@ export class OrdersService {
     const orders = await this.orderModel
       .find()
       .populate('purchaser')
-      .populate('detail')
+      // .populate('detail')
+      .populate({
+        path: 'detail', // Popular el detalle de la orden
+        populate: {
+          path: 'items.product', // Popular los productos dentro de los ítems
+          model: 'Product', // Nombre del modelo de productos
+        },
+      })
       .exec();
     return orders;
   }

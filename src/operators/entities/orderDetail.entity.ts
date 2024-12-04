@@ -1,23 +1,3 @@
-// import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-// import { Document, Types } from 'mongoose';
-// import { Product } from 'src/products/entities/product.entity';
-
-// @Schema()
-// export class OrderDetail extends Document {
-//   @Prop({ type: Types.ObjectId, ref: 'Order', required: true }) // Referencia a Order
-//   orderId: Types.ObjectId;
-
-//   @Prop({ type: [{ type: Types.ObjectId, ref: Product.name }] }) // Múltiples productos
-//   productId: Types.Array<Product | Types.ObjectId>;
-
-//   @Prop({ type: Number })
-//   quantity: number;
-
-//   @Prop({ type: Number })
-//   subTotal: number;
-// }
-
-// export const OrderDetailSchema = SchemaFactory.createForClass(OrderDetail);
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
 import { Product } from 'src/products/entities/product.entity';
