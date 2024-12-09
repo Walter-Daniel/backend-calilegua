@@ -62,6 +62,18 @@ const uri = 'mongodb://walter:123456@localhost:27017/?authMechanism=DEFAULT';
     ReportsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: 'MONGO', // Token para identificar al cliente
+      useFactory: async () => {
+        const uri =
+          'mongodb://walter:123456@localhost:27017/?authMechanism=DEFAULT';
+        const client = new MongoClient(uri);
+        await client.connect();
+        return client.db('admin'); // Retorna la base de datos que usarás
+      },
+    },
+  ],
 })
 export class AppModule {}

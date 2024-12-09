@@ -3,10 +3,10 @@ import type {
   StyleDictionary,
   TDocumentDefinitions,
 } from 'pdfmake/interfaces';
-import { Formatter } from 'src/helpers/formatter';
 import { OrderModel } from '../models/order.model';
-import { FormatterDate } from 'src/helpers/formatterDate';
-import { SlaceId } from 'src/helpers/sliceId';
+import { Formatter } from '../../helpers/formatter';
+import { FormatterDate } from '../../helpers/formatterDate';
+import { SlaceId } from '../../helpers/sliceId';
 
 const logo: Content = {
   image: 'src/assets/logo.png',

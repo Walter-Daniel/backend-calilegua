@@ -2,7 +2,7 @@ import { Global, Module } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { MongoClient } from 'mongodb';
-import config from 'src/config';
+import config from '../config';
 
 const APIKEY = 'DEV-456';
 const APIKEYPROD = 'PROD-12345';

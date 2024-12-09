@@ -3,7 +3,6 @@ import { Document } from 'mongoose';
 
 export enum OperatorRole {
   PURCHASER = 'purchaser',
-  SELLER = 'seller',
   ADMIN = 'admin',
 }
 

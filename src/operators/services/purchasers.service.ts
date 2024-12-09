@@ -28,8 +28,7 @@ export class PurchasersService {
     const purchasers = await this.purchaserModel
       .find(filters)
       .skip(offset)
-      .limit(limit)
-      .exec();
+      .limit(limit);
     return purchasers;
   }
 
@@ -53,9 +52,11 @@ export class PurchasersService {
     if (changes.age < 18) {
       throw new BadRequestException('Purchaser must be at least 18 years old');
     }
-    const updatePurchaser = await this.purchaserModel
-      .findByIdAndUpdate(id, changes, { new: true })
-      .exec();
+    const updatePurchaser = await this.purchaserModel.findByIdAndUpdate(
+      id,
+      changes,
+      { new: true },
+    );
     if (!updatePurchaser) {
       throw new NotFoundException(`Purchaser with ID ${id} not found`);
     }
@@ -63,7 +64,7 @@ export class PurchasersService {
   }
 
   async remove(id: string) {
-    const result = await this.purchaserModel.deleteOne({ _id: id }).exec();
+    const result = await this.purchaserModel.deleteOne({ _id: id });
     if (result.deletedCount === 0) {
       throw new NotFoundException(`Purchaser with ID ${id} not found`);
     }

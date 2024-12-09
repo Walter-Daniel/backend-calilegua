@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { PurchasersService } from './services/purchasers.service';
 import { Purchaser, PurchaserSchema } from './entities/purchaser.entity';
 
-import { ProductsModule } from 'src/products/products.module';
+import { ProductsModule } from '../products/products.module';
 import { Order, OrderSchema } from './entities/order.entity';
 import { OrdersController } from './controllers/orders.controller';
 import { OrdersService } from './services/orders.service';

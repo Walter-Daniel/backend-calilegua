@@ -68,15 +68,15 @@ export class UpdateProductDTO extends PartialType(CreateProductDTO) {}
 export class FilterProductDTO {
   @IsOptional()
   @IsPositive()
-  limit: number;
+  limit?: number;
 
   @IsOptional()
   @Min(0)
-  offset: number;
+  offset?: number;
 
   @IsOptional()
   @Min(0)
-  minPrice: number;
+  minPrice?: number;
 
   @ValidateIf((params) => params.minPrice)
   @IsPositive()

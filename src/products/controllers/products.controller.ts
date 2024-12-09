@@ -16,12 +16,12 @@ import {
   FilterProductDTO,
   UpdateProductDTO,
 } from '../dtos/product.dto';
-import { MongoIdPipe } from 'src/common/mongo-id.pipe';
-import { Public } from 'src/auth/decorators/public.decorator';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { Roles } from 'src/auth/decorators/roles.decorator';
-import { Role } from 'src/auth/models/role.model';
-import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { MongoIdPipe } from '../../common/mongo-id.pipe';
+import { Public } from '../../auth/decorators/public.decorator';
+import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { Roles } from '../../auth/decorators/roles.decorator';
+import { Role } from '../../auth/models/role.model';
+import { RolesGuard } from '../../auth/guards/roles.guard';
 
 @UseGuards(JwtAuthGuard, RolesGuard)
 @ApiTags('Products')
