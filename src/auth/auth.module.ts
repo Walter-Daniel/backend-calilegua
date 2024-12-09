@@ -5,9 +5,9 @@ import { ConfigType } from '@nestjs/config';
 
 import { AuthService } from './services/auth.service';
 import { LocalStrategy } from './strategies/local.strategy';
-import { OperatorsModule } from 'src/operators/operators.module';
+import { OperatorsModule } from '../operators/operators.module';
 import { AuthController } from './controllers/auth.controller';
-import config from 'src/config';
+import config from '../config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 
 @Module({

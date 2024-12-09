@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrinterService } from './printer.service';
 import { billReport } from '../documents/bill.reports';
 import { InjectModel } from '@nestjs/mongoose';
-import { Order } from 'src/operators/entities/order.entity';
+import { Order } from '../../operators/entities/order.entity';
 import { Model } from 'mongoose';
 import { OrderModel } from '../models/order.model';
 

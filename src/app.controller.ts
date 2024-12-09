@@ -1,5 +1,5 @@
 import { AppService } from './app.service';
-import { Controller, Get, SetMetadata, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { Public } from './auth/decorators/public.decorator';
 import { ApiKeyGuard } from './auth/guards/api-key.guard';
 
@@ -12,10 +12,6 @@ export class AppController {
   getApiKey(): string {
     return this.appService.getApiKey();
   }
-  @Get('tasks')
-  tasks() {
-    return this.appService.getTasks();
-  }
 
   @Public()
   @Get('probando')
@@ -23,9 +19,8 @@ export class AppController {
     return 'Probando...';
   }
 
-  // @SetMetadata('isPublic', true)
   @Get('nuevo')
   publica(): string {
-    return 'Holaaaaa';
+    return 'Hola mundo';
   }
 }

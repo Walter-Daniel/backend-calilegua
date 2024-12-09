@@ -8,7 +8,7 @@ import {
 import { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { OrderDetail } from '../entities/orderDetail.entity';
-import { Product } from 'src/products/entities/product.entity';
+import { Product } from '../../products/entities/product.entity';
 
 @Injectable()
 export class OrdersService {
@@ -22,7 +22,6 @@ export class OrdersService {
     const orders = await this.orderModel
       .find()
       .populate('purchaser')
-      // .populate('detail')
       .populate({
         path: 'detail', // Popular el detalle de la orden
         populate: {

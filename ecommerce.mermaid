@@ -1,0 +1,54 @@
+erDiagram
+    User {
+        string _id
+        string email
+        string password
+        string name
+        string[] roles
+        date createdAt
+        date updatedAt
+    }
+    Product {
+        string _id
+        string name
+        string description
+        number price
+        number stock
+        string image
+        date createdAt
+        date updatedAt
+    }
+    Order {
+        string _id
+        string userId
+        string status
+        number totalAmount
+        date orderDate
+        date createdAt
+        date updatedAt
+    }
+    OrderItem {
+        string _id
+        string orderId
+        string productId
+        number quantity
+        number price
+    }
+    Category {
+        string _id
+        string name
+        string description
+    }
+    Review {
+        string _id
+        string userId
+        string productId
+        number rating
+        string comment
+        date createdAt
+    }
+
+    User ||--o{ Order : places
+    Order ||--|{ OrderItem : contains
+    Product ||--o{ OrderItem : "is part of"
+    Product }o--|| Category : "belongs to"
